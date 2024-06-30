@@ -1,11 +1,13 @@
-
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
-
   return (
-    <div className="flex justify-center items-center h-screen w-screen bg-white">
-      Hello Template
-    </div>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
 
