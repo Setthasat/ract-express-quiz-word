@@ -13,7 +13,7 @@ function Button({ children, textCol, ...props }: ButtonPropType) {
   }
   const editedClassName = `border font-bold font-mono bg-white flex items-center justify-center min-h-[4rem] min-w-[20rem] border-black ${textCol}`;
   return (
-    <button {...props} className={editedClassName}>
+    <button {...props} className={editedClassName} >
       {children}
     </button>
   );

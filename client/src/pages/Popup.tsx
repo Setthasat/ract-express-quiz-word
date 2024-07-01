@@ -1,17 +1,15 @@
+import axios from "axios";
 import { useState } from "react";
-import useStore from "../Store/Word";
 
 function Popup(props: any) {
 
-  const addWord = useStore((state) => state.addWord);
-  const getWords = useStore((state) => state.getWords);
 
   const handleClosePopup = () => {
     props.setTogglePopup(!props.togglePopup);
   };
 
   const [Word, setWord] = useState({
-    Word: "",
+    word: "",
     part_of_speech: ""
   });
 
@@ -23,16 +21,35 @@ function Popup(props: any) {
     }));
   };
 
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    addWord(Word);
-    console.log(getWords());
+
+    const wordData = {
+      word: Word.word,
+      part_of_speech: Word.part_of_speech
+    };
+
+    try {
+      const api = await axios.post("http://localhost:8888/api/create/word", wordData,);
+      if (!api.data.data) {
+        console.log("Cannot get api");
+        return;
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data);
+      } else {
+        console.error('Unexpected error:', error);
+      }
+    }
+
     setWord({
-      Word: "",
+      word: "",
       part_of_speech: ""
     });
     handleClosePopup();
   };
+
 
   return (
     <div className="absolute items-center bg-black/30 justify-center backdrop-blur-sm w-screen h-screen">
@@ -56,10 +73,10 @@ function Popup(props: any) {
             <form onSubmit={onSubmit}>
               <input onChange={onChangeInput}
                 className="w-[25rem] flex justify-center items-center font-thin border-white border-b-[1px] placeholder:text-white placeholder:font-thin focus:outline-none text-white bg-transparent h-[3rem]"
-                name="Word"
+                name="word"
                 type="text"
-                value={Word.Word}
-                placeholder="Word" />
+                value={Word.word}
+                placeholder="word" />
               <select onChange={onChangeInput}
                 className="w-[25rem] flex justify-center items-center font-thin border-white border-b-[1px] placeholder:text-white placeholder:font-thin focus:outline-none text-white bg-transparent h-[3rem]"
                 name="part_of_speech"

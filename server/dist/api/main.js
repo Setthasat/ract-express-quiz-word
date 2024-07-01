@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Api = void 0;
 const axios_1 = __importDefault(require("axios"));
 class Api {
-    constructor() {
+    constructor(WordRepositoryInst) {
         this.createWord = (req, res) => __awaiter(this, void 0, void 0, function* () {
             //@ts-ignore
             const BaseResponseInst = new BaseResponse();
@@ -29,8 +29,6 @@ class Api {
                 const response = yield axios_1.default.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
                 // console.log(response);
                 const definitions = response.data;
-                //????????
-                // const meaning = definitions[0].meanings.find((m: any) => m.partOfSpeech === part_of_speech);
                 const meaning = [];
                 for (let i = 0; i < definitions.length; i++) {
                     for (let j = 0; j < definitions[i].meanings.length; j++) {
@@ -43,14 +41,40 @@ class Api {
                     BaseResponseInst.setValue(404, "No definition found for the given part of speech", null);
                     return res.status(404).json(BaseResponseInst.buildResponse());
                 }
-                BaseResponseInst.setValue(200, "Definition found", meaning);
-                return res.status(200).json(BaseResponseInst.buildResponse());
+                const wordData = {
+                    word: word,
+                    part_of_speech: part_of_speech,
+                    definition: meaning[0]
+                };
+                const exitWord = this.WordRepositoryInst.findWord(word, part_of_speech);
+                if (exitWord === null) {
+                    try {
+                        yield this.WordRepositoryInst.createWord(wordData);
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+                    BaseResponseInst.setValue(200, "Create word success", wordData);
+                    return res.status(200).json(BaseResponseInst.buildResponse());
+                }
+                else {
+                    BaseResponseInst.setValue(500, `${word} is already exit`, null);
+                    return res.status(500).json(BaseResponseInst.buildResponse());
+                }
             }
             catch (error) {
-                BaseResponseInst.setValue(500, "An error occurred while fetching the definition", null);
+                BaseResponseInst.setValue(500, "Cannot create word", null);
                 return res.status(500).json(BaseResponseInst.buildResponse());
             }
         });
+        this.getAllWords = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            //@ts-ignore
+            const BaseResponseInst = new BaseResponse();
+            const words = this.WordRepositoryInst.findAllWord();
+            BaseResponseInst.setValue(200, "success", words);
+            return res.status(200).json(BaseResponseInst.buildResponse());
+        });
+        this.WordRepositoryInst = WordRepositoryInst;
     }
 }
 exports.Api = Api;
@@ -75,12 +99,3 @@ class BaseResponse {
         this.data = data;
     }
 }
-// Example usage with Express
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-const api = new Api();
-app.post('/createWord', api.createWord);
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});

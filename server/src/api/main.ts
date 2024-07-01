@@ -3,9 +3,13 @@ import { Request, Response } from "express";
 import { ResponseDataDictionaryApi } from '../type/responseDataDictionnary.type';
 
 export class Api {
-    constructor() { }
+    private WordRepositoryInst;
+    constructor(WordRepositoryInst: any) {
+        this.WordRepositoryInst = WordRepositoryInst;
+    }
 
     createWord = async (req: Request, res: Response) => {
+
         //@ts-ignore
         const BaseResponseInst = new BaseResponse();
         const { word, part_of_speech } = req.body;
@@ -22,18 +26,12 @@ export class Api {
             // console.log(response);
             const definitions = response.data;
 
-            //????????
-            // const meaning = definitions[0].meanings.find((m: any) => m.partOfSpeech === part_of_speech);
-
             const meaning: any = [];
 
             for (let i = 0; i < definitions.length; i++) {
                 for (let j = 0; j < definitions[i].meanings.length; j++) {
                     if (definitions[i].meanings[j].partOfSpeech === part_of_speech) {
-                        //take only definition === part_of_speech
                         meaning.push(definitions[i].meanings[i].definitions[0].definition);
-                        //take all definition
-                        // meaning.push(definitions[i].meanings);
                     }
                 }
             }
@@ -43,16 +41,39 @@ export class Api {
                 return res.status(404).json(BaseResponseInst.buildResponse());
             }
 
-            BaseResponseInst.setValue(200, "Definition found", meaning);
-            return res.status(200).json(BaseResponseInst.buildResponse());
+            const wordData = {
+                word: word,
+                part_of_speech: part_of_speech,
+                definition: meaning[0]
+            };
 
+            const exitWord = this.WordRepositoryInst.findWord(word, part_of_speech);
+            if (exitWord === null) {
+                try {
+                    await this.WordRepositoryInst.createWord(wordData);
+                } catch (error) {
+                    console.log(error);
+                }
+                BaseResponseInst.setValue(200, "Create word success", wordData);
+                return res.status(200).json(BaseResponseInst.buildResponse());
+            } else {
+                BaseResponseInst.setValue(500, `${word} is already exit`, null);
+                return res.status(500).json(BaseResponseInst.buildResponse());
+            }
         } catch (error) {
-            BaseResponseInst.setValue(500, "An error occurred while fetching the definition", null);
+            BaseResponseInst.setValue(500, "Cannot create word", null);
             return res.status(500).json(BaseResponseInst.buildResponse());
         }
     };
-}
 
+    getAllWords = async (req: Request, res: Response) => {
+        //@ts-ignore
+        const BaseResponseInst = new BaseResponse();
+        const words = this.WordRepositoryInst.findAllWord();
+        BaseResponseInst.setValue(200, "success", words);
+        return res.status(200).json(BaseResponseInst.buildResponse());
+    };
+}
 
 class BaseResponse {
     code: number;
@@ -81,16 +102,3 @@ class BaseResponse {
         this.data = data;
     }
 }
-
-// Example usage with Express
-import express from 'express';
-const app = express();
-app.use(express.json());
-
-const api = new Api();
-
-app.post('/createWord', api.createWord);
-
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-});

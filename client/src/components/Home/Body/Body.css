@@ -1,0 +1,19 @@
+.button-body {
+    border: 1px solid black;
+    /* border and border-black */
+    font-weight: bold;
+    /* font-bold */
+    font-family: monospace;
+    /* font-mono */
+    background-color: white;
+    /* bg-white */
+    display: flex;
+    /* flex */
+    align-items: center;
+    /* items-center */
+    justify-content: center;
+    /* justify-center */
+    min-height: 4rem;
+    /* min-h-[4rem] */
+    min-width: 20rem;
+}

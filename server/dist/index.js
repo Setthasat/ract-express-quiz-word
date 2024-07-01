@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const main_1 = require("./api/main");
+const wordModel_1 = require("./model/wordModel");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8888;
@@ -20,11 +21,15 @@ app.use(express_1.default.json());
 //         console.log(error);
 //     }
 // }
-const ApiInst = new main_1.Api();
+const WordRepositoryInst = new wordModel_1.WordRepository();
+const ApiInst = new main_1.Api(WordRepositoryInst);
 app.get('/', (req, res) => {
     res.send('Hello, world!');
 });
+//create
 app.post('/api/create/word', ApiInst.createWord);
+//get
+app.get('/api/get/words', ApiInst.getAllWords);
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });

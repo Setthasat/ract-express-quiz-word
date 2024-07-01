@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { Api } from './api/main';
+import { WordRepository } from './model/wordModel';
 dotenv.config();
 
 const app = express();
@@ -20,13 +21,17 @@ app.use(express.json());
 //     }
 // }
 
-const ApiInst = new Api();
+const WordRepositoryInst = new WordRepository();
+const ApiInst = new Api(WordRepositoryInst);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello, world!');
 });
 
+//create
 app.post('/api/create/word', ApiInst.createWord);
+//get
+app.get('/api/get/words', ApiInst.getAllWords);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

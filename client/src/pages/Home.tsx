@@ -1,12 +1,12 @@
 import React from "react";
-import Body from "../components/Home/Body";
+import Body from "../components/Home/Body/Body";
 import Popup from "./Popup";
 
 function Home() {
   const [togglePopup, setTogglePopup] = React.useState<Boolean>(false);
 
   return (
-    <div className="h-screen w-screen flex justify-center items-center bg-gradient-to-t from-violet-400 to-violet-600">
+    <div className="flex justify-center items-center w-screen h-screen">
       {togglePopup ? (
         <Popup
           togglePopup={togglePopup}

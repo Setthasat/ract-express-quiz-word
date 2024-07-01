@@ -1,4 +1,5 @@
-import Button from "../uitl/Button";
+import Button from "../../uitl/Button";
+import './Body.css';
 
 function Body(props: any) {
   function handleTogglePopup() {
@@ -11,11 +12,11 @@ function Body(props: any) {
         User
       </div>
       <div className="grid gap-4 grid-cols-1 ">
-        <Button onClick={handleTogglePopup} textCol={"text-purple-500"}>
+        <a onClick={handleTogglePopup} className="button-body">
           Add Words
-        </Button>
-        <Button textCol={"text-red-500"}>Word Lists</Button>
-        <Button textCol={"text-green-500"}>Quiz Word</Button>
+        </a>
+        <a className="button-body" href="/words">Word Lists</a>
+        <a className="button-body">Quiz Word</a>
       </div>
     </div>
   );
