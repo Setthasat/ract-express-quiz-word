@@ -1,19 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
 .button-body {
-    border: 1px solid black;
-    /* border and border-black */
-    font-weight: bold;
-    /* font-bold */
-    font-family: monospace;
-    /* font-mono */
-    background-color: white;
-    /* bg-white */
+    width: 24rem;
+    height: 6rem;
+    font-size: 1.5rem;
+    color: #2e1065;
     display: flex;
-    /* flex */
-    align-items: center;
-    /* items-center */
     justify-content: center;
-    /* justify-center */
-    min-height: 4rem;
-    /* min-h-[4rem] */
-    min-width: 20rem;
+    align-items: center;
+    border-radius: 1rem;
+    box-shadow: 1px 2px 2rem rgba(95, 0, 156, 0.4);
+    border-width: 0.5rem;
+    border-color: #2e1065;
+    border-style: solid;
 }

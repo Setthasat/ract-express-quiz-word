@@ -74,6 +74,18 @@ class Api {
             BaseResponseInst.setValue(200, "success", words);
             return res.status(200).json(BaseResponseInst.buildResponse());
         });
+        this.findWord = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            const { word } = req.body;
+            //@ts-ignore
+            const BaseResponseInst = new BaseResponse();
+            const findword = this.WordRepositoryInst.findWord(word);
+            if (findword === null) {
+                BaseResponseInst.setValue(500, "cannot find word", null);
+                return res.status(500).json(BaseResponseInst.buildResponse());
+            }
+            BaseResponseInst.setValue(200, "success", findword);
+            return res.status(200).json(BaseResponseInst.buildResponse());
+        });
         this.WordRepositoryInst = WordRepositoryInst;
     }
 }

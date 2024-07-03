@@ -1,21 +1,20 @@
 import React from "react";
 import Body from "../components/Home/Body/Body";
 import Popup from "./Popup";
+import { useStore } from "../store/store";
 
 function Home() {
-  const [togglePopup, setTogglePopup] = React.useState<Boolean>(false);
+  const { isPopupOpen, togglePopup } = useStore();
 
   return (
-    <div className="flex justify-center items-center w-screen h-screen">
-      {togglePopup ? (
+    <div className="flex justify-center items-center w-screen h-screen relative">
+      {isPopupOpen && (
         <Popup
-          togglePopup={togglePopup}
-          setTogglePopup={setTogglePopup}
-        ></Popup>
-      ) : (
-        <></>
+          // @ts-ignore
+          setTogglePopup={togglePopup}
+        />
       )}
-      <Body togglePopup={togglePopup} setTogglePopup={setTogglePopup} />
+      <Body togglePopup={togglePopup} setTogglePopup={togglePopup} />
     </div>
   );
 }

@@ -73,6 +73,20 @@ export class Api {
         BaseResponseInst.setValue(200, "success", words);
         return res.status(200).json(BaseResponseInst.buildResponse());
     };
+
+    findWord = async (req: Request, res: Response) => {
+
+        const { word } = req.body;
+        //@ts-ignore
+        const BaseResponseInst = new BaseResponse();
+        const findword = this.WordRepositoryInst.findWord(word);
+        if (findword === null) {
+            BaseResponseInst.setValue(500, "cannot find word", null);
+            return res.status(500).json(BaseResponseInst.buildResponse());
+        }
+        BaseResponseInst.setValue(200, "success", findword);
+        return res.status(200).json(BaseResponseInst.buildResponse());
+    };
 }
 
 class BaseResponse {

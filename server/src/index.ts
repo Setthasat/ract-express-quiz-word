@@ -30,8 +30,10 @@ app.get('/', (req: Request, res: Response) => {
 
 //create
 app.post('/api/create/word', ApiInst.createWord);
-//get
+//get words
 app.get('/api/get/words', ApiInst.getAllWords);
+//get word
+app.post('/api/get/word', ApiInst.findWord);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

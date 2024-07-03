@@ -28,12 +28,11 @@ class WordRepository {
         return deletedData;
     }
     //@ts-ignore
-    findWord(Wordname, part_of_speech) {
+    findWord(Wordname) {
         let found = false;
         for (let i = 0; i < this.WordDataDB.length; i++) {
-            if (this.WordDataDB[i].word === Wordname && this.WordDataDB[i].part_of_speech === part_of_speech) {
+            if (this.WordDataDB[i].word === Wordname) {
                 found = true;
-                console.log("heelo");
                 return this.WordDataDB[i];
             }
         }
