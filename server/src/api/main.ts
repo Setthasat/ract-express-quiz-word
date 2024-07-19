@@ -87,6 +87,26 @@ export class Api {
         BaseResponseInst.setValue(200, "success", findword);
         return res.status(200).json(BaseResponseInst.buildResponse());
     };
+
+    deleteWord = (req: Request, res: Response) => {
+        const { word, part_of_speech } = req.body;
+        //@ts-ignore
+        const BaseResponseInst = new BaseResponse();
+
+        if (!word || !part_of_speech) {
+            BaseResponseInst.setValue(400, "Word or part of speech is required", null);
+            return res.status(400).json(BaseResponseInst.buildResponse());
+        }
+
+        try {
+            const deletedWord = this.WordRepositoryInst.deleteWord(word, part_of_speech);
+            BaseResponseInst.setValue(200, 'Deleted successfully', deletedWord);
+            return res.status(200).json(BaseResponseInst.buildResponse());
+        } catch (error) {
+            BaseResponseInst.setValue(500, 'Error deleting word', error);
+            return res.status(500).json(BaseResponseInst.buildResponse());
+        }
+    };
 }
 
 class BaseResponse {

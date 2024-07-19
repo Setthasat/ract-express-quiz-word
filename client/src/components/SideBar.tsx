@@ -7,6 +7,8 @@ interface SideBarProps {
     toggleSidebar: () => void;
 }
 
+// add filter bar
+
 const SideBar: React.FC<SideBarProps> = ({ isOpen, toggleSidebar }) => {
     return (
         <div className={`fixed top-0 left-0 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} w-[20rem]`}>

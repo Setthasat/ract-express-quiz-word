@@ -15,30 +15,26 @@ class WordRepository {
             deletedWordName: Wordname,
             deletedPartOfSpeech: part_of_speech
         };
-        try {
-            for (let i = 0; i < this.WordDataDB.length; i++) {
-                if (this.WordDataDB[i].word === Wordname && this.WordDataDB[i].part_of_speech === part_of_speech) {
-                    delete this.WordDataDB[i];
-                }
+        let found = false;
+        for (let i = 0; i < this.WordDataDB.length; i++) {
+            if (this.WordDataDB[i].word === Wordname && this.WordDataDB[i].part_of_speech === part_of_speech) {
+                this.WordDataDB.splice(i, 1);
+                found = true;
+                break;
             }
         }
-        catch (error) {
-            throw error;
+        if (!found) {
+            throw new Error("Word not found");
         }
         return deletedData;
     }
-    //@ts-ignore
-    findWord(Wordname) {
-        let found = false;
+    findWord(Wordname, part_of_speech) {
         for (let i = 0; i < this.WordDataDB.length; i++) {
-            if (this.WordDataDB[i].word === Wordname) {
-                found = true;
+            if (this.WordDataDB[i].word === Wordname && this.WordDataDB[i].part_of_speech === part_of_speech) {
                 return this.WordDataDB[i];
             }
         }
-        if (found === false) {
-            return null;
-        }
+        return null;
     }
     findAllWord() {
         const result = structuredClone(this.WordDataDB);
