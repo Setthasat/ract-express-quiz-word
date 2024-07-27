@@ -42,6 +42,23 @@ class WordRepository {
     }
     //@ts-ignore
     findWordByLength(choichLength) {
+        const shuffledIndex = [];
+        let newIndexes = [];
+        if (choichLength > this.WordDataDB.length) {
+            return null;
+        }
+        while (choichLength !== newIndexes.length) {
+            const randomIndex = Math.floor(Math.random() * choichLength);
+            //@ts-ignore
+            if (!newIndexes.includes(randomIndex)) {
+                newIndexes.push(randomIndex);
+            }
+        }
+        for (let i = 0; i < newIndexes.length; i++) {
+            shuffledIndex.push(this.WordDataDB[newIndexes[i]]);
+        }
+        console.log(shuffledIndex);
+        return shuffledIndex;
     }
 }
 exports.WordRepository = WordRepository;

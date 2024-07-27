@@ -34,6 +34,8 @@ app.get('/api/get/words', ApiInst.getAllWords);
 app.post('/api/get/word', ApiInst.findWord);
 // delete word 
 app.delete('/api/delete/word', ApiInst.deleteWord);
+// quiz 
+app.post('/api/quiz', ApiInst.quiz);
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });

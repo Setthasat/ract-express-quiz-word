@@ -109,6 +109,13 @@ class Api {
             //@ts-ignore
             const BaseResponseInst = new BaseResponse();
             //check words length(Array{DB}) ? < chocieLength 
+            const words = this.WordRepositoryInst.findWordByLength(choiceLength);
+            if (words === null) {
+                BaseResponseInst.setValue(500, 'Error cannot find words', null);
+                return res.status(500).json(BaseResponseInst.buildResponse());
+            }
+            BaseResponseInst.setValue(200, "success", words);
+            return res.status(200).json(BaseResponseInst.buildResponse());
         };
         this.WordRepositoryInst = WordRepositoryInst;
     }
