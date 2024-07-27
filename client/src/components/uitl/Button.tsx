@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
 interface ButtonPropType extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   textCol?: String;
 }
 
 function Button({ children, textCol, ...props }: ButtonPropType) {
-
 
   if (!textCol) {
     textCol = "text-black";

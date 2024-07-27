@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
-.button-body {
-    width: 24rem;
-    height: 6rem;
+.card-body {
+    width: 26rem;
+    height: 26rem;
     font-size: 1.5rem;
     color: #2e1065;
     display: flex;

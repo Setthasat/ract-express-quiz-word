@@ -107,6 +107,14 @@ export class Api {
             return res.status(500).json(BaseResponseInst.buildResponse());
         }
     };
+
+    quiz = (req : Request, res : Response) => {
+        const { choiceLength } = req.body;
+        //@ts-ignore
+        const  BaseResponseInst = new BaseResponse();
+        //check words length(Array{DB}) ? < chocieLength 
+        const words = this.WordRepositoryInst.findWordByLength(choiceLength)
+    }
 }
 
 class BaseResponse {

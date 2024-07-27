@@ -104,6 +104,12 @@ class Api {
                 return res.status(500).json(BaseResponseInst.buildResponse());
             }
         };
+        this.quiz = (req, res) => {
+            const { choiceLength } = req.body;
+            //@ts-ignore
+            const BaseResponseInst = new BaseResponse();
+            //check words length(Array{DB}) ? < chocieLength 
+        };
         this.WordRepositoryInst = WordRepositoryInst;
     }
 }

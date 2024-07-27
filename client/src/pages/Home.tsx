@@ -7,14 +7,17 @@ function Home() {
   const { isPopupOpen, togglePopup } = useStore();
 
   return (
-    <div className="flex justify-center items-center w-screen h-screen relative">
-      {isPopupOpen && (
-        <Popup
-          // @ts-ignore
-          setTogglePopup={togglePopup}
-        />
-      )}
-      <Body togglePopup={togglePopup} setTogglePopup={togglePopup} />
+    <div className="flex flex-col justify-center items-center w-screen h-screen relative">
+      <h1 className="mb-[2rem] text-[5rem] font-bold">WORD QUIZ</h1>
+      <div>
+        {isPopupOpen && (
+          <Popup
+            // @ts-ignore
+            setTogglePopup={togglePopup}
+          />
+        )}
+        <Body togglePopup={togglePopup} setTogglePopup={togglePopup} />
+      </div>
     </div>
   );
 }

@@ -24,7 +24,7 @@ class WordRepository {
             }
         }
         if (!found) {
-            throw new Error("Word not found");
+            console.log(`${Wordname} is not found`);
         }
         return deletedData;
     }
@@ -39,6 +39,9 @@ class WordRepository {
     findAllWord() {
         const result = structuredClone(this.WordDataDB);
         return result;
+    }
+    //@ts-ignore
+    findWordByLength(choichLength) {
     }
 }
 exports.WordRepository = WordRepository;

@@ -5,6 +5,7 @@ interface WordRepositoryInterface {
     deleteWord(Wordname: string, part_of_speech: string): DeletedDataType;
     findWord(Wordname: string, part_of_speech: string): WordDataType | null;
     findAllWord(): Array<WordDataType>;
+    findWordByLength(): Array<WordDataType>;
 }
 
 export class WordRepository implements WordRepositoryInterface {
@@ -37,7 +38,7 @@ export class WordRepository implements WordRepositoryInterface {
         }
 
         if (!found) {
-            throw new Error("Word not found");
+            console.log(`${Wordname} is not found`)
         }
 
         return deletedData;
@@ -55,5 +56,21 @@ export class WordRepository implements WordRepositoryInterface {
     findAllWord(): Array<WordDataType> {
         const result = structuredClone(this.WordDataDB);
         return result;
+    }
+
+    //@ts-ignore
+    findWordByLength(choichLength): Array<WordDataType> | null {
+        const shuffledIndex = []
+        let newIndexes = [] 
+        if(choichLength > this.WordDataDB.length){
+            return null
+        }
+        while(choichLength !== newIndexes.length){
+            const randomIndex = Math.floor(Math.random() * choichLength)
+            //@ts-ignore
+            if(!newIndex.includes(randomIndex)){
+                newIndexes.push(randomIndex)
+            }
+        }
     }
 }
