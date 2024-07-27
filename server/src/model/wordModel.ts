@@ -60,7 +60,7 @@ export class WordRepository implements WordRepositoryInterface {
 
     //@ts-ignore
     findWordByLength(choichLength): Array<WordDataType> | null {
-        const shuffledIndex = []
+        const shuffledIndex = [] 
         let newIndexes = [] 
         if(choichLength > this.WordDataDB.length){
             return null
@@ -72,5 +72,11 @@ export class WordRepository implements WordRepositoryInterface {
                 newIndexes.push(randomIndex)
             }
         }
+
+        for(let i = 0; i < newIndexes.length ; i++){
+            shuffledIndex.push(this.WordDataDB[newIndexes[i]])
+        }
+        
+        return shuffledIndex
     }
 }
