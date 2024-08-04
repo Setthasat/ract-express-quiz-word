@@ -21,8 +21,9 @@ app.use(express.json());
 //     }
 // }
 
-const WordRepositoryInst = new WordRepository();
-const ApiInst = new Api(WordRepositoryInst);
+const wordRepositoryInst = new WordRepository();
+//@ts-ignore
+const ApiInst = new Api(wordRepositoryInst);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello, world!');
@@ -37,7 +38,7 @@ app.post('/api/get/word', ApiInst.findWord);
 // delete word 
 app.delete('/api/delete/word', ApiInst.deleteWord);
 // quiz 
-app.post('/api/quiz', ApiInst.quiz)
+app.post('/api/quiz', ApiInst.quiz);
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);

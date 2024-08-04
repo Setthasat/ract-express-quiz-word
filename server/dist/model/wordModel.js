@@ -41,7 +41,7 @@ class WordRepository {
         return result;
     }
     //@ts-ignore
-    findWordByLength(choichLength) {
+    quizRepo(choichLength) {
         const shuffledIndex = [];
         let newIndexes = [];
         if (choichLength > this.WordDataDB.length) {
@@ -57,7 +57,6 @@ class WordRepository {
         for (let i = 0; i < newIndexes.length; i++) {
             shuffledIndex.push(this.WordDataDB[newIndexes[i]]);
         }
-        console.log(shuffledIndex);
         return shuffledIndex;
     }
 }

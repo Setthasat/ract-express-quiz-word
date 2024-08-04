@@ -21,8 +21,9 @@ app.use(express_1.default.json());
 //         console.log(error);
 //     }
 // }
-const WordRepositoryInst = new wordModel_1.WordRepository();
-const ApiInst = new main_1.Api(WordRepositoryInst);
+const wordRepositoryInst = new wordModel_1.WordRepository();
+//@ts-ignore
+const ApiInst = new main_1.Api(wordRepositoryInst);
 app.get('/', (req, res) => {
     res.send('Hello, world!');
 });

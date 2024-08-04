@@ -1,14 +1,18 @@
-import React from "react";
 import Body from "../components/Home/Body/Body";
 import Popup from "./Popup";
 import { useStore } from "../store/store";
+import { motion } from 'framer-motion';
 
 function Home() {
   const { isPopupOpen, togglePopup } = useStore();
 
   return (
     <div className="flex flex-col justify-center items-center w-screen h-screen relative">
-      <h1 className="mb-[2rem] text-[5rem] font-bold">WORD QUIZ</h1>
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 0.5 }}
+        className="mb-[2rem] text-[5rem] font-bold text-[#7E30E1] ">WORD QUIZ</motion.h1>
       <div>
         {isPopupOpen && (
           <Popup
@@ -20,6 +24,6 @@ function Home() {
       </div>
     </div>
   );
-}
+};
 
 export default Home;

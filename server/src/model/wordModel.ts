@@ -1,17 +1,16 @@
 import { WordDataType, DeletedDataType } from "../type/wordModel";
 
-interface WordRepositoryInterface {
+export interface WordRepositoryInterface {
     createWord(word: WordDataType): WordDataType;
     deleteWord(Wordname: string, part_of_speech: string): DeletedDataType;
     findWord(Wordname: string, part_of_speech: string): WordDataType | null;
     findAllWord(): Array<WordDataType>;
-    findWordByLength(): Array<WordDataType>;
 }
 
 export class WordRepository implements WordRepositoryInterface {
 
     private WordDataDB: Array<WordDataType>;
-
+    
     constructor() {
         this.WordDataDB = new Array<WordDataType>;
     }
@@ -58,27 +57,4 @@ export class WordRepository implements WordRepositoryInterface {
         return result;
     }
 
-    //@ts-ignore
-    findWordByLength(choichLength): Array<WordDataType> | null {
-        const shuffledIndex = [] 
-        let newIndexes : Array<number> = [] 
-        if(choichLength > this.WordDataDB.length){
-            return null
-        }
-        while(choichLength !== newIndexes.length){
-            const randomIndex = Math.floor(Math.random() * choichLength)
-            //@ts-ignore
-            if(!newIndexes.includes(randomIndex)){
-                newIndexes.push(randomIndex)
-            }
-        }
-
-        for(let i = 0; i < newIndexes.length ; i++){
-            shuffledIndex.push(this.WordDataDB[newIndexes[i]])
-        }
-
-        console.log(shuffledIndex)
-        
-        return shuffledIndex
-    }
 }
