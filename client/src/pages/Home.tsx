@@ -1,26 +1,62 @@
-import Body from "../components/Home/Body/Body";
-import Popup from "./Popup";
-import { useStore } from "../store/store";
 import { motion } from 'framer-motion';
+import { useEffect } from 'react';
 
-function Home() {
-  const { isPopupOpen, togglePopup } = useStore();
+function Home({ setChageBox, changeBox }: any) {
+
+  const QuizHeadText = ["Q", "U", "I", "Z", "•", "W", "O", "R", "D"];
+
+  const setAddChange = (event: any) => {
+    event.preventDefault();
+    setChageBox({ ...changeBox, WordList: false, QuizWord: false, AddWord: true });
+  };
+
+  const setListChange = (event: any) => {
+    event.preventDefault();
+    setChageBox({ ...changeBox, WordList: true, QuizWord: false, AddWord: false });
+  };
+
+  const setQuizChange = (event: any) => {
+    event.preventDefault();
+    setChageBox({ ...changeBox, WordList: false, QuizWord: true, AddWord: false });
+  };
+
+  useEffect(() => {
+    console.log(changeBox);
+  }, [changeBox]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-screen h-screen relative">
-      <motion.h1
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="mb-[2rem] text-[5rem] font-bold text-[#7E30E1] ">WORD QUIZ</motion.h1>
-      <div>
-        {isPopupOpen && (
-          <Popup
-            // @ts-ignore
-            setTogglePopup={togglePopup}
-          />
-        )}
-        <Body togglePopup={togglePopup} setTogglePopup={togglePopup} />
+    <div className="flex justify-center items-start py-[7rem] px-[8rem] w-1/2 h-screen">
+      <div className="h-full">
+        <p className="text-[6rem] tracking-widest font-bold flex">
+          {QuizHeadText.map((letter, index) => (
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.2, delay: 0.05 * index }}
+              key={index}>
+              {letter}
+            </motion.p>
+          ))}
+        </p>
+        <div className='bg-slate-600 flex flex-col mt-[10rem] h-[30rem] justify-center items-center rounded-xl text-2xl'>
+          <div onClick={setAddChange} className='w-full text-center al flex justify-center border-b-2 items-center h-[10rem]'>
+            <p>Add</p>
+          </div>
+          <div onClick={setListChange} className='w-full text-center al flex justify-center border-b-2 items-center h-[10rem]'>
+            <p>List</p>
+          </div>
+          <div onClick={setQuizChange} className='w-full text-center al flex justify-center items-center h-[10rem]'>
+            <p>Quiz</p>
+          </div>
+        </div>
+        {/* <div className='flex justify-between text-center   items-center mt-[10rem] h-[10rem] bg-slate-500 rounded-xl'>
+          <div className='w-full h-full flex justify-center items-center border-r-2 rotate'>
+            YES
+          </div>
+          <div className='w-full h-full justify-center items-center flex'>
+            NO
+          </div>
+        </div> */}
       </div>
     </div>
   );

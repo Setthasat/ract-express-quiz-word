@@ -13,8 +13,8 @@ function HomeCard({ children, imgSrc, ...props }: HomeCardInterface) {
             <div className='flex items-center justify-center h-[14rem] w-full bg-white rounded-t-xl'>
                 {imgSrc ? <img src={imgSrc} alt="Card" className="object-cover w-full h-full" /> : 'hi i\'m img'}
             </div>
-            <a className="flex w-full h-[12rem] text-2xl text-[#7E30E1] justify-center items-center shadow-[1px_2px_2rem_rgba(95,0,156,0.4)] border-t-[2px] border-[#2e1065] cursor-pointer">
-                {children}
+            <a className="flex w-full h-[12rem] text-[#7E30E1] justify-center items-center border-t-[2px] border-[#2e1065] cursor-pointer">
+                <p className='text-[2rem]'>{children}</p>
             </a>
         </a>
     );

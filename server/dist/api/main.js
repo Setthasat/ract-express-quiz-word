@@ -125,15 +125,28 @@ class Api {
                 const quizQuestions = [];
                 while (quizQuestions.length < choiceLength) {
                     const correctWord = allWords[Math.floor(Math.random() * allWords.length)];
+                    //chioce array
                     const choices = [correctWord.definition];
-                    //add chocie to each question
+                    //random chocie and add chocie to each question
                     while (choices.length < 3) {
                         const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
+                        //check choice 
                         if (randomWord.definition !== correctWord.definition && !choices.includes(randomWord.definition)) {
                             choices.push(randomWord.definition);
                         }
                     }
-                    this.customShuffleArray(choices);
+                    this.shuffleArray(choices);
+                    // response quiz must be like this !!!!
+                    // {
+                    //     "word": "run",
+                    //     "choices": [
+                    //         "choice1",
+                    //         "choice2",
+                    //         "choice3"
+                    //     ],
+                    //     "correctAnswer": "choice3"
+                    // },
+                    //push items
                     quizQuestions.push({
                         word: correctWord.word,
                         choices,
@@ -150,7 +163,7 @@ class Api {
         });
         this.wordRepositoryInst = wordRepositoryInst;
     }
-    customShuffleArray(array) {
+    shuffleArray(array) {
         const shuffledIndex = [];
         let newIndexes = [];
         while (array.length !== newIndexes.length) {

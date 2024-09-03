@@ -40,24 +40,5 @@ class WordRepository {
         const result = structuredClone(this.WordDataDB);
         return result;
     }
-    //@ts-ignore
-    quizRepo(choichLength) {
-        const shuffledIndex = [];
-        let newIndexes = [];
-        if (choichLength > this.WordDataDB.length) {
-            return null;
-        }
-        while (choichLength !== newIndexes.length) {
-            const randomIndex = Math.floor(Math.random() * choichLength);
-            //@ts-ignore
-            if (!newIndexes.includes(randomIndex)) {
-                newIndexes.push(randomIndex);
-            }
-        }
-        for (let i = 0; i < newIndexes.length; i++) {
-            shuffledIndex.push(this.WordDataDB[newIndexes[i]]);
-        }
-        return shuffledIndex;
-    }
 }
 exports.WordRepository = WordRepository;

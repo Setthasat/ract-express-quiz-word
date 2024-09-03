@@ -1,30 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { FiX } from 'react-icons/fi';
 
-interface SideBarProps {
-    isOpen: boolean;
-    toggleSidebar: () => void;
-}
-
-// add filter bar
-
-const SideBar: React.FC<SideBarProps> = ({ isOpen, toggleSidebar }) => {
-    return (
-        <div className={`fixed top-0 left-0 h-full bg-white shadow-lg z-50 transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'} w-[20rem]`}>
-            <div className='flex justify-between items-center p-4 border-b border-gray-200'>
-                <h1 className='text-xl font-bold'>Menu</h1>
-                <button onClick={toggleSidebar} className='text-2xl'>
-                    <FiX />
-                </button>
-            </div>
-            <div className='mt-6 mx-4 space-y-4'>
-                <Link to="/" className='block text-lg font-medium text-gray-700 hover:text-violet-500 transition-colors' onClick={toggleSidebar}>Home</Link>
-                <Link to="/words" className='block text-lg font-medium text-gray-700 hover:text-violet-500 transition-colors' onClick={toggleSidebar}>Word List</Link>
-                <Link to="/quiz" className='block text-lg font-medium text-gray-700 hover:text-violet-500 transition-colors' onClick={toggleSidebar}>Word Quiz</Link>
-            </div>
-        </div>
-    );
+const SideBar: React.FC = () => {
+  return (
+    <div className="bg-primary-purple text-white flex flex-col w-64 h-full">
+      <div className="p-4 font-bold text-2xl">QUiz WORD</div>
+      <div className="flex-grow">
+        <button className="w-full p-4 bg-secondary-pink hover:bg-primary-purple text-white">Add word</button>
+        <button className="w-full p-4 bg-black hover:bg-secondary-pink text-white">Word list</button>
+        <button className="w-full p-4 bg-secondary-pink hover:bg-primary-purple text-white">QUiz</button>
+      </div>
+    </div>
+  );
 };
 
 export default SideBar;
