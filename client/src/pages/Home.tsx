@@ -27,7 +27,7 @@ function Home({ setChageBox, changeBox }: any) {
   return (
     <div className="flex justify-center items-start py-[7rem] px-[8rem] w-1/2 h-screen">
       <div className="h-full">
-        <p className="text-[6rem] tracking-widest font-bold flex">
+        <p className="text-[6rem] text-white tracking-widest font-bold flex">
           {QuizHeadText.map((letter, index) => (
             <motion.p
               initial={{ opacity: 0 }}
@@ -38,7 +38,7 @@ function Home({ setChageBox, changeBox }: any) {
             </motion.p>
           ))}
         </p>
-        <div className='bg-slate-600 flex flex-col mt-[10rem] h-[30rem] justify-center items-center rounded-xl text-2xl'>
+        <div className=' flex flex-col mt-[10rem] h-[30rem] text-white bg-white/10 backdrop-blur-md border-white border justify-center items-center rounded-xl text-2xl'>
           <div onClick={setAddChange} className='w-full text-center al flex justify-center border-b-2 items-center h-[10rem]'>
             <p>Add</p>
           </div>
@@ -57,6 +57,9 @@ function Home({ setChageBox, changeBox }: any) {
             NO
           </div>
         </div> */}
+      </div>
+      <div>
+        
       </div>
     </div>
   );

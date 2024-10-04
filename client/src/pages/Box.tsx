@@ -5,7 +5,7 @@ import QuizWord from '../components/Box/QuizWord';
 
 function Box({ changeBox }: any) {
     return (
-        <div className='flex justify-center items-center border w-1/2 max-h-screen h-[74rem]  rounded-2xl  bg-gray-500 py-[10rem]'>
+        <div className='flex justify-center items-center border border-white bg-white/10 backdrop-blur-md w-1/2 max-h-screen h-[70rem] bg-white rounded-2xl shadow-inner py-[12rem]'>
             {changeBox.AddWord ? (
                 <AddWord />
             ) : changeBox.WordList ? (

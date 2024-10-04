@@ -3,14 +3,14 @@ import { WordDataType, DeletedDataType } from "../type/wordModel";
 export interface WordRepositoryInterface {
     createWord(word: WordDataType): WordDataType;
     deleteWord(Wordname: string, part_of_speech: string): DeletedDataType;
-    findWord(Wordname: string, part_of_speech: string): WordDataType | null;
+    findExistWord(Wordname: string, part_of_speech: string): WordDataType | null;
     findAllWord(): Array<WordDataType>;
 }
 
 export class WordRepository implements WordRepositoryInterface {
 
     private WordDataDB: Array<WordDataType>;
-    
+
     constructor() {
         this.WordDataDB = new Array<WordDataType>;
     }
@@ -37,18 +37,20 @@ export class WordRepository implements WordRepositoryInterface {
         }
 
         if (!found) {
-            console.log(`${Wordname} is not found`)
+            console.log(`${Wordname} is not found`);
         }
 
         return deletedData;
     }
 
-    findWord(Wordname: string, part_of_speech: string): WordDataType | null {
+    findExistWord(Wordname: string, part_of_speech: string): WordDataType | null {
         for (let i = 0; i < this.WordDataDB.length; i++) {
-            if (this.WordDataDB[i].word === Wordname && this.WordDataDB[i].part_of_speech === part_of_speech) {
+            if (this.WordDataDB[i].word.toLowerCase() === Wordname.toLowerCase() && this.WordDataDB[i].part_of_speech.toLowerCase() === part_of_speech.toLowerCase()) {
+                console.log("hi i'm exist :( ")
                 return this.WordDataDB[i];
             }
         }
+
         return null;
     }
 

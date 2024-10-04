@@ -12,14 +12,6 @@ const port = process.env.PORT || 8888;
 app.use(cors());
 app.use(express.json());
 
-// if (process.env.DB_URL) {
-//     try {
-//         mongoose.connect(process.env.DB_URL);
-//         console.log('DB Connected...');
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 
 const wordRepositoryInst = new WordRepository();
 //@ts-ignore

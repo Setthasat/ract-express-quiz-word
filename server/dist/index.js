@@ -13,14 +13,6 @@ const app = (0, express_1.default)();
 const port = process.env.PORT || 8888;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-// if (process.env.DB_URL) {
-//     try {
-//         mongoose.connect(process.env.DB_URL);
-//         console.log('DB Connected...');
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 const wordRepositoryInst = new wordModel_1.WordRepository();
 //@ts-ignore
 const ApiInst = new main_1.Api(wordRepositoryInst);

@@ -28,9 +28,10 @@ class WordRepository {
         }
         return deletedData;
     }
-    findWord(Wordname, part_of_speech) {
+    findExistWord(Wordname, part_of_speech) {
         for (let i = 0; i < this.WordDataDB.length; i++) {
-            if (this.WordDataDB[i].word === Wordname && this.WordDataDB[i].part_of_speech === part_of_speech) {
+            if (this.WordDataDB[i].word.toLowerCase() === Wordname.toLowerCase() && this.WordDataDB[i].part_of_speech.toLowerCase() === part_of_speech.toLowerCase()) {
+                console.log("hi i'm exist :( ");
                 return this.WordDataDB[i];
             }
         }

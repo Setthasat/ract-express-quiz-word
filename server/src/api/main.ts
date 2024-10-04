@@ -16,61 +16,69 @@ export class Api {
     }
 
     createWord = async (req: Request, res: Response) => {
+        
         //@ts-ignore
         const baseResponseInst = new BaseResponse();
         const { word, part_of_speech } = req.body;
-
+    
+        // Validate input
         if (!word || !part_of_speech) {
             baseResponseInst.setValue(400, "Something is missing", null);
             return res.status(400).json(baseResponseInst.buildResponse());
         }
-
+    
         part_of_speech.toLowerCase();
-
+    
         try {
+            // Check if the word already exists
+            const existWord = this.wordRepositoryInst.findExistWord(word, part_of_speech);
+            if (existWord !== null) {
+                console.log("Exist:", word);
+                baseResponseInst.setValue(409, `${word} already exists`, null);
+                return res.status(409).json(baseResponseInst.buildResponse());
+            }
+    
+            // Fetch definitions from external dictionary API
             const response = await axios.get<ResponseDataDictionaryApi[]>(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-            // console.log(response);
             const definitions = response.data;
-
+    
             const meaning: any = [];
-
+    
+            // Find the definition that matches the part of speech
             for (let i = 0; i < definitions.length; i++) {
                 for (let j = 0; j < definitions[i].meanings.length; j++) {
                     if (definitions[i].meanings[j].partOfSpeech === part_of_speech) {
-                        meaning.push(definitions[i].meanings[i].definitions[0].definition);
+                        meaning.push(definitions[i].meanings[j].definitions[0].definition);
                     }
                 }
             }
-
+    
+            // Check if no matching definitions were found
             if (meaning.length === 0) {
                 baseResponseInst.setValue(404, "No definition found for the given part of speech", null);
                 return res.status(404).json(baseResponseInst.buildResponse());
             }
-
+    
+            // Prepare word data to store
             const wordData = {
                 word: word,
                 part_of_speech: part_of_speech,
                 definition: meaning[0]
             };
 
-            const exitWord = this.wordRepositoryInst.findWord(word, part_of_speech);
-            if (exitWord === null) {
-                try {
-                    await this.wordRepositoryInst.createWord(wordData);
-                } catch (error) {
-                    console.log(error);
-                }
-                baseResponseInst.setValue(200, "Create word success", wordData);
-                return res.status(200).json(baseResponseInst.buildResponse());
-            } else {
-                baseResponseInst.setValue(500, `${word} is already exit`, null);
-                return res.status(500).json(baseResponseInst.buildResponse());
-            }
+            await this.wordRepositoryInst.createWord(wordData);
+            console.log("Creating:", word);
+            baseResponseInst.setValue(200, "Create word success", wordData);
+            return res.status(200).json(baseResponseInst.buildResponse());
+    
         } catch (error) {
+            console.error("Error creating word:", error);
             baseResponseInst.setValue(500, "Cannot create word", null);
             return res.status(500).json(baseResponseInst.buildResponse());
         }
     };
+    
+
 
     getAllWords = async (req: Request, res: Response) => {
         //@ts-ignore
@@ -118,7 +126,7 @@ export class Api {
     quiz = async (req: Request, res: Response) => {
         //@ts-ignore
         const baseResponseInst = new BaseResponse();
-        const { choiceLength} = req.body; // Number of questions
+        const { choiceLength } = req.body; // Number of questions
 
         //check word length
         if (choiceLength < 3) {
