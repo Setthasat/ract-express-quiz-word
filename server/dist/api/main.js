@@ -106,48 +106,50 @@ class Api {
                 return res.status(500).json(baseResponseInst.buildResponse());
             }
         };
-        this.quiz = (req, res) => __awaiter(this, void 0, void 0, function* () {
+        this.quiz = (req, res) => {
             //@ts-ignore
             const baseResponseInst = new BaseResponse();
             const { choiceLength } = req.body; // Number of questions
-            //check word length
+            console.log(choiceLength);
+            // Check word length
             if (choiceLength < 3) {
                 baseResponseInst.setValue(400, 'Choice length must be at least 3', null);
                 return res.status(400).json(baseResponseInst.buildResponse());
             }
-            //get all word for chocie
+            // Get all words for choice
             try {
                 const allWords = this.wordRepositoryInst.findAllWord();
-                //check chocie length
+                console.log(allWords);
+                // Check choice length
                 if (allWords.length < choiceLength) {
                     baseResponseInst.setValue(500, 'Not enough words to generate the quiz', null);
                     return res.status(500).json(baseResponseInst.buildResponse());
                 }
                 const quizQuestions = [];
+                const usedWords = []; // Array to keep track of used words
                 while (quizQuestions.length < choiceLength) {
                     const correctWord = allWords[Math.floor(Math.random() * allWords.length)];
-                    //chioce array
+                    // Check if the word has already been used
+                    if (usedWords.includes(correctWord.word)) {
+                        continue; // Skip this word if already used
+                    }
+                    // Add the word to the usedWords array
+                    usedWords.push(correctWord.word);
+                    // Choice array
                     const choices = [correctWord.definition];
-                    //random chocie and add chocie to each question
+                    // Random choices and add to each question
                     while (choices.length < 3) {
                         const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-                        //check choice 
-                        if (randomWord.definition !== correctWord.definition && !choices.includes(randomWord.definition)) {
+                        // Check choice
+                        const isSameWordDefinition = randomWord.definition === correctWord.definition;
+                        const isAlreadyExistWordDefinition = choices.includes(randomWord.definition);
+                        if (!isSameWordDefinition && !isAlreadyExistWordDefinition) {
                             choices.push(randomWord.definition);
                         }
                     }
+                    // Shuffle choices
                     this.shuffleArray(choices);
-                    // response quiz must be like this !!!!
-                    // {
-                    //     "word": "run",
-                    //     "choices": [
-                    //         "choice1",
-                    //         "choice2",
-                    //         "choice3"
-                    //     ],
-                    //     "correctAnswer": "choice3"
-                    // },
-                    //push items
+                    // Push items
                     quizQuestions.push({
                         word: correctWord.word,
                         choices,
@@ -161,7 +163,7 @@ class Api {
                 baseResponseInst.setValue(500, 'Error generating quiz', error);
                 return res.status(500).json(baseResponseInst.buildResponse());
             }
-        });
+        };
         this.wordRepositoryInst = wordRepositoryInst;
     }
     shuffleArray(array) {

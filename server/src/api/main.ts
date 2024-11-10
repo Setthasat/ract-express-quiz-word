@@ -16,19 +16,19 @@ export class Api {
     }
 
     createWord = async (req: Request, res: Response) => {
-        
+
         //@ts-ignore
         const baseResponseInst = new BaseResponse();
         const { word, part_of_speech } = req.body;
-    
+
         // Validate input
         if (!word || !part_of_speech) {
             baseResponseInst.setValue(400, "Something is missing", null);
             return res.status(400).json(baseResponseInst.buildResponse());
         }
-    
+
         part_of_speech.toLowerCase();
-    
+
         try {
             // Check if the word already exists
             const existWord = this.wordRepositoryInst.findExistWord(word, part_of_speech);
@@ -37,13 +37,13 @@ export class Api {
                 baseResponseInst.setValue(409, `${word} already exists`, null);
                 return res.status(409).json(baseResponseInst.buildResponse());
             }
-    
+
             // Fetch definitions from external dictionary API
             const response = await axios.get<ResponseDataDictionaryApi[]>(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
             const definitions = response.data;
-    
+
             const meaning: any = [];
-    
+
             // Find the definition that matches the part of speech
             for (let i = 0; i < definitions.length; i++) {
                 for (let j = 0; j < definitions[i].meanings.length; j++) {
@@ -52,13 +52,13 @@ export class Api {
                     }
                 }
             }
-    
+
             // Check if no matching definitions were found
             if (meaning.length === 0) {
                 baseResponseInst.setValue(404, "No definition found for the given part of speech", null);
                 return res.status(404).json(baseResponseInst.buildResponse());
             }
-    
+
             // Prepare word data to store
             const wordData = {
                 word: word,
@@ -70,14 +70,14 @@ export class Api {
             console.log("Creating:", word);
             baseResponseInst.setValue(200, "Create word success", wordData);
             return res.status(200).json(baseResponseInst.buildResponse());
-    
+
         } catch (error) {
             console.error("Error creating word:", error);
             baseResponseInst.setValue(500, "Cannot create word", null);
             return res.status(500).json(baseResponseInst.buildResponse());
         }
     };
-    
+
 
 
     getAllWords = async (req: Request, res: Response) => {
@@ -123,62 +123,70 @@ export class Api {
         }
     };
 
-    quiz = async (req: Request, res: Response) => {
+    quiz = (req: Request, res: Response) => {
         //@ts-ignore
         const baseResponseInst = new BaseResponse();
         const { choiceLength } = req.body; // Number of questions
+        console.log(choiceLength);
 
-        //check word length
+        // Check word length
         if (choiceLength < 3) {
             baseResponseInst.setValue(400, 'Choice length must be at least 3', null);
             return res.status(400).json(baseResponseInst.buildResponse());
         }
 
-        //get all word for chocie
+        // Get all words for choice
         try {
             const allWords = this.wordRepositoryInst.findAllWord();
-            //check chocie length
+            console.log(allWords);
+
+            // Check choice length
             if (allWords.length < choiceLength) {
                 baseResponseInst.setValue(500, 'Not enough words to generate the quiz', null);
                 return res.status(500).json(baseResponseInst.buildResponse());
             }
 
             const quizQuestions: Array<ChoiceType> = [];
+            const usedWords: string[] = []; // Array to keep track of used words
 
             while (quizQuestions.length < choiceLength) {
                 const correctWord = allWords[Math.floor(Math.random() * allWords.length)];
-                //chioce array
+
+                // Check if the word has already been used
+                if (usedWords.includes(correctWord.word)) {
+                    continue; // Skip this word if already used
+                }
+
+                // Add the word to the usedWords array
+                usedWords.push(correctWord.word);
+
+                // Choice array
                 const choices = [correctWord.definition];
 
-                //random chocie and add chocie to each question
+                // Random choices and add to each question
                 while (choices.length < 3) {
                     const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-                    //check choice 
-                    if (randomWord.definition !== correctWord.definition && !choices.includes(randomWord.definition)) {
+
+                    // Check choice
+                    const isSameWordDefinition = randomWord.definition === correctWord.definition;
+                    const isAlreadyExistWordDefinition = choices.includes(randomWord.definition);
+
+                    if (!isSameWordDefinition && !isAlreadyExistWordDefinition) {
                         choices.push(randomWord.definition);
                     }
                 }
 
+                // Shuffle choices
                 this.shuffleArray(choices);
 
-                // response quiz must be like this !!!!
-                // {
-                //     "word": "run",
-                //     "choices": [
-                //         "choice1",
-                //         "choice2",
-                //         "choice3"
-                //     ],
-                //     "correctAnswer": "choice3"
-                // },
-
-                //push items
+                // Push items
                 quizQuestions.push({
                     word: correctWord.word,
                     choices,
                     correctAnswer: correctWord.definition
                 });
             }
+
             baseResponseInst.setValue(200, 'Quiz generated successfully', quizQuestions);
             return res.status(200).json(baseResponseInst.buildResponse());
         } catch (error) {
@@ -186,6 +194,7 @@ export class Api {
             return res.status(500).json(baseResponseInst.buildResponse());
         }
     };
+
 
     private shuffleArray(array: any[]) {
         const shuffledIndex = [];

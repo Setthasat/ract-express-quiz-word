@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 
 function Home({ setChageBox, changeBox }: any) {
-
   const QuizHeadText = ["Q", "U", "I", "Z", "•", "W", "O", "R", "D"];
 
   const setAddChange = (event: any) => {
@@ -25,9 +24,9 @@ function Home({ setChageBox, changeBox }: any) {
   }, [changeBox]);
 
   return (
-    <div className="flex justify-center items-start py-[7rem] px-[8rem] w-1/2 h-screen">
+    <div className="flex justify-center items-start py-[4rem] sm:py-[6rem] lg:py-[7rem] px-[2rem] sm:px-[4rem] lg:px-[8rem] w-full sm:w-3/4 lg:w-1/2 h-screen">
       <div className="h-full">
-        <p className="text-[6rem] text-white tracking-widest font-bold flex">
+        <p className="text-[3rem] sm:text-[5rem] lg:text-[6rem] text-white tracking-widest font-bold flex">
           {QuizHeadText.map((letter, index) => (
             <motion.p
               initial={{ opacity: 0 }}
@@ -38,31 +37,20 @@ function Home({ setChageBox, changeBox }: any) {
             </motion.p>
           ))}
         </p>
-        <div className=' flex flex-col mt-[10rem] h-[30rem] text-white bg-white/10 backdrop-blur-md border-white border justify-center items-center rounded-xl text-2xl'>
-          <div onClick={setAddChange} className='w-full text-center al flex justify-center border-b-2 items-center h-[10rem]'>
+        <div className='flex flex-col mt-[2rem] sm:mt-[4rem] lg:mt-[6rem] h-[20rem] sm:h-[25rem] lg:h-[30rem] text-white bg-white/10 backdrop-blur-md border-white border justify-center items-center rounded-xl text-lg sm:text-xl lg:text-2xl'>
+          <div onClick={setAddChange} className='w-full text-center flex justify-center border-b-2 items-center h-[6rem] sm:h-[8rem] lg:h-[10rem] cursor-pointer hover:bg-white/20'>
             <p>Add</p>
           </div>
-          <div onClick={setListChange} className='w-full text-center al flex justify-center border-b-2 items-center h-[10rem]'>
+          <div onClick={setListChange} className='w-full text-center flex justify-center border-b-2 items-center h-[6rem] sm:h-[8rem] lg:h-[10rem] cursor-pointer hover:bg-white/20'>
             <p>List</p>
           </div>
-          <div onClick={setQuizChange} className='w-full text-center al flex justify-center items-center h-[10rem]'>
+          <div onClick={setQuizChange} className='w-full text-center flex justify-center items-center h-[6rem] sm:h-[8rem] lg:h-[10rem] cursor-pointer hover:bg-white/20'>
             <p>Quiz</p>
           </div>
         </div>
-        {/* <div className='flex justify-between text-center   items-center mt-[10rem] h-[10rem] bg-slate-500 rounded-xl'>
-          <div className='w-full h-full flex justify-center items-center border-r-2 rotate'>
-            YES
-          </div>
-          <div className='w-full h-full justify-center items-center flex'>
-            NO
-          </div>
-        </div> */}
-      </div>
-      <div>
-        
       </div>
     </div>
   );
-};
+}
 
 export default Home;
