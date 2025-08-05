@@ -1,14 +1,29 @@
-import { useState } from 'react';
 import axios from 'axios';
-import QuizDisplay from './QuizDisplay'; // Import the quiz display component
+import QuizDisplay from './QuizDisplay';
 import Hamburger from '../Hamburger';
+import { useState, useEffect } from 'react';
+import { useStore } from '../../store/store';
+import { useNavigate } from 'react-router-dom';
 
 function QuizWord() {
   const [choiceLength, setChoiceLength] = useState('');
+  //@ts-ignore
   const [isLessThanThree, setIsLessThanThree] = useState(false);
+  //@ts-ignore
   const [isEnoughWord, setIsEnoughWord] = useState(false);
   const [buttonState, setButtonState] = useState({ color: '', text: 'Start' });
   const [quizData, setQuizData] = useState(null);
+
+
+  const getUserId = useStore((state) => state.getUserId);
+  const navigate = useNavigate();
+  const userID = getUserId();
+
+  useEffect(() => {
+    if (!getUserId()) {
+      navigate("/login");
+    }
+  }, [getUserId, navigate]);
 
   const onChangeInput = (event: any) => {
     const { value } = event.target;
@@ -17,9 +32,11 @@ function QuizWord() {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-
+    const userData = {
+      user_id: userID
+    };
     try {
-      const allDataLength = await axios.get("http://localhost:8888/api/get/words");
+      const allDataLength = await axios.post("http://localhost:8888/api/get/words", userData);
       const availableWordsCount = allDataLength.data.data.length;
       const choiceLengthInt = parseInt(choiceLength);
 
@@ -32,7 +49,11 @@ function QuizWord() {
         setButtonState({ color: 'bg-red-500', text: 'Not enough words in list' });
         setTimeout(() => setButtonState({ color: '', text: 'Start' }), 3000);
       } else {
-        const response = await axios.post("http://localhost:8888/api/quiz", { choiceLength: choiceLengthInt });
+        const quizReq = {
+          user_id: userID,
+          choiceLength: choiceLengthInt
+        };
+        const response = await axios.post("http://localhost:8888/api/quiz", quizReq);
         console.log(response.data.data);
         setQuizData(response.data.data);
       }
@@ -46,7 +67,7 @@ function QuizWord() {
       <div className='absolute top-12 left-12'>
         <Hamburger />
       </div>
-      <div className='grid justify-center items-start h-full w-full px-4 sm:px-8 lg:px-16'>
+      <div className='grid justify-center items-start h-full w-full -mt-[8rem] px-4 sm:px-8 lg:px-16'>
         <div className='border-b-2 w-full flex items-center justify-center pb-[2rem] text-center'>
           <p className='flex justify-center items-center text-white font-bold text-3xl md:text-4xl lg:text-5xl'>
             QUIZ

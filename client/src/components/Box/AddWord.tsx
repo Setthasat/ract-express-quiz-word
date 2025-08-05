@@ -1,14 +1,30 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useStore } from '../../store/store';
+import { useNavigate } from 'react-router-dom';
+
 import Hamburger from '../Hamburger';
 
 const partOfSpeechOptions = ['noun', 'verb', 'adjective', 'adverb'];
 
 function AddWord() {
+
+    const getUserId = useStore((state) => state.getUserId);
+    const navigate = useNavigate();
+    const userID = getUserId();
+
+    useEffect(() => {
+        if (!getUserId()) {
+            navigate("/login");
+        }
+    }, [getUserId, navigate]);
+
+
     const [isComplete, setIsComplete] = useState(false);
     const [isError, setIsError] = useState(false);
 
     const [Word, setWord] = useState({
+        user_id: userID,
         word: '',
         part_of_speech: '',
     });
@@ -32,6 +48,7 @@ function AddWord() {
         event.preventDefault();
 
         const wordData = {
+            user_id: userID,
             word: Word.word,
             part_of_speech: Word.part_of_speech,
         };
@@ -60,6 +77,7 @@ function AddWord() {
         }
 
         setWord({
+            user_id: userID,
             word: '',
             part_of_speech: '',
         });
@@ -68,7 +86,7 @@ function AddWord() {
     const isFormValid = Word.word.trim() !== '' && Word.part_of_speech !== '';
 
     return (
-        <div className='relative flex flex-col justify-center items-center border border-white bg-white/10 backdrop-blur-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[55rem] h-[55rem] bg-white rounded-2xl shadow-inner py-8 sm:py-12 md:py-16 lg:py-[12rem]'>
+        <div className='relative flex flex-col justify-center items-center border border-white bg-white/5 backdrop-blur-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[55rem] h-[55rem] bg-white rounded-2xl shadow-inner py-8 sm:py-12 md:py-16 lg:py-[12rem]'>
             <div className='absolute top-12 left-12'>
                 <Hamburger />
             </div>
@@ -83,7 +101,7 @@ function AddWord() {
                         <div className='flex flex-col gap-4 sm:gap-6 md:gap-8 lg:gap-10 justify-center items-center'>
                             <input
                                 onChange={onChangeInput}
-                                className='w-full sm:w-[25rem] md:w-[35rem] lg:w-[40rem] h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] p-2 rounded-lg text-center shadow-xl focus:outline-none text-white bg-white/20 focus:bg-white/40 duration-300'
+                                className='w-full sm:w-[25rem] md:w-[35rem] lg:w-[40rem] h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] p-2 rounded-lg text-center shadow-xl focus:outline-none text-white bg-white/10 focus:bg-white/30 focus:duration-300 duration-300'
                                 name='word'
                                 type='text'
                                 value={Word.word}
@@ -95,7 +113,7 @@ function AddWord() {
                                         key={part}
                                         type='button'
                                         onClick={() => handlePartOfSpeechChange(part)}
-                                        className={`flex justify-center items-center h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] rounded-lg text-white text-lg md:text-xl lg:text-2xl ${Word.part_of_speech === part ? 'bg-gradient-to-r from-purple-500 to-violet-500 shadow-lg' : 'bg-white/20 hover:bg-white/40'} transition-all`}
+                                        className={`flex justify-center items-center h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] rounded-lg text-white text-lg md:text-xl lg:text-2xl ${Word.part_of_speech === part ? 'bg-gradient-to-r from-purple-500 to-violet-500 shadow-lg' : 'bg-white/10 hover:bg-white/15'} transition-all`}
                                     >
                                         {part.charAt(0).toUpperCase() + part.slice(1)}
                                     </button>
@@ -104,7 +122,7 @@ function AddWord() {
                             <button
                                 type='submit'
                                 disabled={!isFormValid}
-                                className={`w-full sm:w-[18rem] md:w-[22rem] lg:w-[26rem] h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] mt-4 py-2 text-white rounded-lg shadow-lg transition-all ${isError ? 'bg-red-500 hover:bg-red-600' : isComplete ? 'bg-green-500 hover:bg-green-600' : isFormValid ? 'bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600' : 'bg-white/5 hover:bg-white/40 cursor-not-allowed'}`}
+                                className={`w-full sm:w-[18rem] md:w-[22rem] lg:w-[26rem] h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] mt-4 py-2 text-white rounded-lg shadow-lg transition-all ${isError ? 'bg-red-500 hover:bg-red-600' : isComplete ? 'bg-green-500 hover:bg-green-600' : isFormValid ? 'bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600' : 'bg-white/5 hover:bg-white/15 cursor-not-allowed'}`}
                             >
                                 <p className='text-lg md:text-xl lg:text-2xl'>
                                     {isError ? 'Fail to submit' : isComplete ? 'Success' : 'Submit'}

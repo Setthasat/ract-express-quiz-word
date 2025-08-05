@@ -1,15 +1,34 @@
 import { useState, useEffect } from 'react';
+import { useStore } from '../../store/store';
+import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 import Hamburger from '../Hamburger';
 
 function WordList() {
+
   const [data, setData] = useState<Array<any>>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const itemsPerPage = 3;
 
+  const getUserId = useStore((state) => state.getUserId);
+  const navigate = useNavigate();
+  const userID = getUserId();
+
+  useEffect(() => {
+    if (!getUserId()) {
+      navigate("/login");
+    }
+  }, [getUserId, navigate]);
+
   const fetchData = async () => {
+
+    const userData = {
+      user_id: userID
+    };
+
     try {
-      const response = await axios.get("http://localhost:8888/api/get/words");
+      const response = await axios.post("http://localhost:8888/api/get/words", userData);
       const fetchedData = response.data.data;
       if (Array.isArray(fetchedData)) {
         setData(fetchedData);
@@ -42,7 +61,7 @@ function WordList() {
   const currentItems = data.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage);
 
   return (
-    <div className='flex flex-col justify-center items-center border border-white bg-white/10 backdrop-blur-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[55rem] h-[55rem] bg-white rounded-2xl shadow-inner py-8 sm:py-12 md:py-16 lg:py-[12rem]'>
+    <div className='flex flex-col justify-center items-center border border-white bg-white/5 backdrop-blur-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[55rem] h-[55rem] bg-white rounded-2xl shadow-inner py-8 sm:py-12 md:py-16 lg:py-[12rem]'>
       <div className='absolute top-12 left-12'>
         <Hamburger />
       </div>
@@ -58,7 +77,7 @@ function WordList() {
             currentItems.map((wordItem) => (
               <div
                 key={wordItem.id}
-                className='text-white p-4 w-full h-[20rem] mt-[2rem] bg-white/20 border border-white rounded-lg shadow-lg mb-4 transition-transform transform hover:scale-105'
+                className='text-white p-4 w-full h-[20rem] mt-[2rem] bg-white/5 border border-white rounded-lg shadow-lg mb-4 transition-transform transform hover:scale-105'
               >
                 <div className='text-center'>
                   <p className='font-bold text-xl border-b-2 pb-2 mb-2'>

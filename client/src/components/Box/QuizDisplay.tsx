@@ -30,7 +30,7 @@ function QuizDisplay({ quizData }: any) {
             <div className="flex flex-col items-center text-white">
                 <p className="text-[3rem] font-bold">Quiz Finished!</p>
                 <p className="text-lg">Your score: {score} / {quizData.length}</p>
-                <button className='w-full h-[4rem] p-[2rem] bg-white/5 hover:bg-white/40 rounded-lg mt-[2rem] text-3xl'>Go Back To Home</button>
+                <button className='w-full h-[4rem] p-[2rem] bg-white/5 hover:bg-white/40 rounded-lg mt-[2rem] text-3xl flex justify-center items-center'>Go Back To Home</button>
             </div>
         );
     }
@@ -42,12 +42,12 @@ function QuizDisplay({ quizData }: any) {
             <h2 className="text-2xl font-bold my-[2rem]">Question {currentQuestionIndex + 1}</h2>
             <p className="text-xl mb-4">Select the definition for : {currentQuestion.word}</p>
 
-            <div className="flex flex-col gap-12 mb-[2rem]">
+            <div className="flex flex-col gap-4 mb-[1rem]">
                 {currentQuestion.choices.map((choice: any, index: any) => (
                     <button
                         key={index}
                         onClick={() => handleAnswerSelection(choice)}
-                        className={`p-4 m-2 text-left rounded-md mt-[2rem] ${selectedAnswer === choice ? 'bg-gradient-to-r from-purple-500 to-violet-500 duration-300 text-white' : 'bg-white/5 hover:bg-white/40 text-white'}`}
+                        className={`p-4 m-2 text-left rounded-md ${selectedAnswer === choice ? 'bg-gradient-to-r from-purple-500 to-violet-500 duration-300 text-white' : 'bg-white/5 hover:bg-white/40 text-white'}`}
                     >
                         {choice}
                     </button>
