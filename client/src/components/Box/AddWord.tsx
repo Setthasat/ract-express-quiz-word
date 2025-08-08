@@ -19,7 +19,6 @@ function AddWord() {
         }
     }, [getUserId, navigate]);
 
-
     const [isComplete, setIsComplete] = useState(false);
     const [isError, setIsError] = useState(false);
 
