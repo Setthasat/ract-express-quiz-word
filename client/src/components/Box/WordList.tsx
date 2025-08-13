@@ -72,18 +72,21 @@ function WordList() {
           </p>
         </div>
 
-        <div className='w-ful max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <div className='w-full max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
           {currentItems.length > 0 ? (
             currentItems.map((wordItem) => (
               <div
                 key={wordItem.id}
-                className='text-white p-4 w-full h-[20rem] mt-[2rem] bg-white/5 border border-white rounded-lg shadow-lg mb-4 transition-transform transform hover:scale-105'
+                className='group relative text-white p-6 min-w-[16rem] w-full h-[20rem] mt-8 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl'
               >
-                <div className='text-center'>
-                  <p className='font-bold text-xl border-b-2 pb-2 mb-2'>
-                    {wordItem.word} <span className='font-medium text-gray-300'>({wordItem.part_of_speech})</span>
+                <div className='relative z-10 flex flex-col  h-full'>
+                  <p className='font-bold text-xl justify-between flex border-b border-white/20 pb-2 mb-3 truncate'>
+                    {wordItem.word}{' '}
+                    <span className='font-medium text-gray-300'>
+                      ({wordItem.part_of_speech})
+                    </span>
                   </p>
-                  <p className='overflow-y-auto h-[20rem] text-center text-lg text-gray-200'>
+                  <p className='flex-1 text-lg text-gray-200 leading-relaxed overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-purple-400/50 scrollbar-track-transparent pr-1'>
                     {wordItem.definition}
                   </p>
                 </div>

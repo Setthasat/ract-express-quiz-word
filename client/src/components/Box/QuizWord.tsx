@@ -84,6 +84,9 @@ function QuizWord() {
               placeholder='Enter your choice length'
               className='w-[32rem] max-w-[40rem] h-[6rem] p-2 rounded-lg text-center shadow-xl focus:outline-none text-white bg-white/20 focus:bg-white/40 duration-300'
             />
+            <div className='flex justify-start items-center flex-col w-full mt-6 -mb-8'>
+              <p className='w-[90%] text-gray-400 '>- Your Word list must have more than 3 words</p>
+            </div>
             <button
               type='submit'
               className={`w-full mt-[4rem] h-[4rem] text-white ${buttonState.color || 'bg-white/5 hover:bg-white/40'} duration-300 rounded-lg`}

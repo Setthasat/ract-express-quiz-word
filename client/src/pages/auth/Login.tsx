@@ -52,7 +52,7 @@ function Login() {
           onSubmit={handleSubmit}
           className="flex gap-[3rem] text-[1.5rem] text-white flex-col justify-center items-center"
         >
-          <div className="relative justify-center items-center">
+          <div className="relative justify-center items-center w-full">
             <input
               ref={emailRef}
               className="w-full h-[4rem] bg-transparent focus:outline-none border-b-2 border-white text-white text-lg placeholder-transparent peer"
@@ -67,7 +67,7 @@ function Login() {
 
           </div>
 
-          <div className="relative justify-center items-center">
+          <div className="relative justify-center items-center  w-full">
             <input
               ref={passwordRef}
               className="w-full h-[4rem] bg-transparent focus:outline-none border-b-2 border-white text-white text-lg placeholder-transparent peer"

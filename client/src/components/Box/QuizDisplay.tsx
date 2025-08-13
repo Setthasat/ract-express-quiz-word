@@ -16,12 +16,12 @@ function QuizDisplay({ quizData }: any) {
             setScore(score + 1);
         }
 
-        setSelectedAnswer(null); // Reset selected answer for the next question
+        setSelectedAnswer(null);
 
         if (currentQuestionIndex < quizData.length - 1) {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
         } else {
-            setIsQuizFinished(true); // End the quiz when questions are finished
+            setIsQuizFinished(true);
         }
     };
 
@@ -30,7 +30,7 @@ function QuizDisplay({ quizData }: any) {
             <div className="flex flex-col items-center text-white">
                 <p className="text-[3rem] font-bold">Quiz Finished!</p>
                 <p className="text-lg">Your score: {score} / {quizData.length}</p>
-                <button className='w-full h-[4rem] p-[2rem] bg-white/5 hover:bg-white/40 rounded-lg mt-[2rem] text-3xl flex justify-center items-center'>Go Back To Home</button>
+                <a className='w-full h-[4rem] p-[2rem] bg-white/5 hover:bg-white/40 rounded-lg mt-[2rem] text-3xl flex justify-center items-center cursor-pointer' href='/Homepage'>Go Back To Home</a>
             </div>
         );
     }

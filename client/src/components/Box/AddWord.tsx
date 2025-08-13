@@ -121,7 +121,7 @@ function AddWord() {
                             <button
                                 type='submit'
                                 disabled={!isFormValid}
-                                className={`w-full sm:w-[18rem] md:w-[22rem] lg:w-[26rem] h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] mt-4 py-2 text-white rounded-lg shadow-lg transition-all ${isError ? 'bg-red-500 hover:bg-red-600' : isComplete ? 'bg-green-500 hover:bg-green-600' : isFormValid ? 'bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600' : 'bg-white/5 hover:bg-white/15 cursor-not-allowed'}`}
+                                className={`w-full h-[3.5rem] md:h-[4.5rem] lg:h-[5.5rem] mt-4 py-2 text-white rounded-lg shadow-lg transition-all ${isError ? 'bg-red-500 hover:bg-red-600' : isComplete ? 'bg-green-500 hover:bg-green-600' : isFormValid ? 'bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600' : 'bg-white/5 hover:bg-white/15 cursor-not-allowed'}`}
                             >
                                 <p className='text-lg md:text-xl lg:text-2xl'>
                                     {isError ? 'Fail to submit' : isComplete ? 'Success' : 'Submit'}
