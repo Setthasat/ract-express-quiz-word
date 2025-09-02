@@ -8,3 +8,16 @@
     font-family: "Rubik", sans-serif;
     font-style: normal;
 }
+
+@keyframes fadeLoop {
+  0%, 100% {
+    opacity: 0;
+  }
+  25%, 75% {
+    opacity: 1;
+  }
+}
+
+.fade-loop {
+  animation: fadeLoop 4s infinite;
+}
