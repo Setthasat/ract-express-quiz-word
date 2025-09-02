@@ -22,7 +22,6 @@ interface LoginRequestBody {
 type RegisterRequest = Request<{}, {}, RegisterRequestBody>;
 type LoginRequest = Request<{}, {}, LoginRequestBody>;
 
-// Base response class to standardize API responses
 class BaseResponse {
     code: number;
     description: string;
@@ -48,7 +47,6 @@ class BaseResponse {
     }
 }
 
-// Auth Controller class with methods for registration, login, and OTP verification
 export class Auth {
     // Register user
     public async register(req: RegisterRequest, res: Response) {
@@ -155,5 +153,19 @@ export class Auth {
 
         baseResponseInst.setValue(200, "Email verified successfully", user);
         return res.status(200).json(baseResponseInst.buildResponse());
+    }
+
+    public async getAllUsers(req: Request, res: Response) {
+        const baseResponseInst = new BaseResponse();
+
+        try {
+            const users = await User.find();
+            baseResponseInst.setValue(200, "Users retrieved successfully", users);
+            return res.status(200).json(baseResponseInst.buildResponse());
+        } catch (error) {
+            console.error("Error retrieving users:", error);
+            baseResponseInst.setValue(500, "Internal Server Error", null);
+            return res.status(500).json(baseResponseInst.buildResponse());
+        }
     }
 }

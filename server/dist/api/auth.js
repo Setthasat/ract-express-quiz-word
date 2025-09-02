@@ -18,7 +18,6 @@ const User_1 = __importDefault(require("../model/User"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-// Base response class to standardize API responses
 class BaseResponse {
     constructor(code = 200, description = "", data = null) {
         this.code = code;
@@ -37,7 +36,6 @@ class BaseResponse {
         this.data = data;
     }
 }
-// Auth Controller class with methods for registration, login, and OTP verification
 class Auth {
     // Register user
     register(req, res) {
@@ -134,6 +132,21 @@ class Auth {
             yield user.save();
             baseResponseInst.setValue(200, "Email verified successfully", user);
             return res.status(200).json(baseResponseInst.buildResponse());
+        });
+    }
+    getAllUsers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const baseResponseInst = new BaseResponse();
+            try {
+                const users = yield User_1.default.find();
+                baseResponseInst.setValue(200, "Users retrieved successfully", users);
+                return res.status(200).json(baseResponseInst.buildResponse());
+            }
+            catch (error) {
+                console.error("Error retrieving users:", error);
+                baseResponseInst.setValue(500, "Internal Server Error", null);
+                return res.status(500).json(baseResponseInst.buildResponse());
+            }
         });
     }
 }

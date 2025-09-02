@@ -26,7 +26,7 @@ function Register() {
   const sendOTPEmail = (email: string, otp: string) => {
     emailjs.send(
       "service_y8rwj9p",
-      "template_b5e936r",
+      "template_1fgk7me",
       {
         user_email: email,
         otp_code: otp,
@@ -51,6 +51,11 @@ function Register() {
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
     const confirmPassword = confirmPasswordRef.current?.value || "";
+
+    console.log("Email:", inputEmail);
+    console.log("Username:", username);
+    console.log("Password:", password);
+    console.log("Confirm Password:", confirmPassword);
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");

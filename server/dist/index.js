@@ -63,6 +63,8 @@ app.post('/api/auth/register', AuthInst.register);
 app.post('/api/auth/login', AuthInst.login);
 //auth verify
 app.post('/api/auth/verify-email', AuthInst.verifyOTP);
+//auth get all users
+app.get('/api/auth/users', AuthInst.getAllUsers);
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
