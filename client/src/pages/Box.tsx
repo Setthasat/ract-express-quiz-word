@@ -7,8 +7,7 @@ import Navbar from "../components/Navbar";
 function Box() {
   const getUserId = useStore((state) => state.getUserId);
   const navigate = useNavigate();
-
-  const QuizHeadText = ["Q", "U", "I", "Z", "•", "W", "O", "R", "D"];
+  const userId = useStore((state) => state.user?.user_id);
 
   useEffect(() => {
     if (!getUserId()) {
@@ -16,23 +15,12 @@ function Box() {
     }
   }, [getUserId, navigate]);
 
+  console.log(userId)
+
   return (
     <>
       <Navbar />
-      <div className="relative flex flex-col justify-center items-center border border-white bg-white/5 backdrop-blur-md w-[90%] sm:w-[70%] max-w-[80rem] min-h-[32rem] h-auto rounded-2xl shadow-inner p-6 sm:p-10 lg:p-16">
-        <div className="text-[2rem] sm:text-[4rem] lg:text-[5rem] text-white tracking-widest font-bold flex">
-          {QuizHeadText.map((letter, index) => (
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.2, delay: 0.05 * index }}
-              key={index}
-            >
-              {letter}
-            </motion.p>
-          ))}
-        </div>
-
+      <div className="relative flex flex-col justify-center items-center border border-white bg-white/5 backdrop-blur-md w-[90%] sm:w-[70%] max-w-[80rem] min-h-[32rem] h-auto rounded-2xl shadow-inner p-6 sm:p-10 lg:p-16">        
         <div className="flex flex-wrap justify-center items-center text-white mt-12 gap-5">
           <Link
             to="/AddWord"

@@ -12,9 +12,17 @@ function Register() {
   const otpRef = useRef<HTMLInputElement>(null);
 
   const [showOTPField, setShowOTPField] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("Verify OTP");
+
+  const [pendingUser, setPendingUser] = useState<{
+    user_id: string;
+    email: string;
+    username: string;
+    password: string;
+    otp: string;
+  } | null>(null);
 
   const navigate = useNavigate();
 
@@ -24,15 +32,16 @@ function Register() {
   };
 
   const sendOTPEmail = (email: string, otp: string) => {
-    emailjs.send(
-      "service_y8rwj9p",
-      "template_1fgk7me",
-      {
-        user_email: email,
-        otp_code: otp,
-      },
-      "TBtoUmfuso6NDg03O"
-    )
+    emailjs
+      .send(
+        "service_y8rwj9p",
+        "template_1fgk7me",
+        {
+          user_email: email,
+          otp_code: otp,
+        },
+        "TBtoUmfuso6NDg03O"
+      )
       .then(
         (result) => {
           console.log("OTP email sent:", result.text);
@@ -43,19 +52,12 @@ function Register() {
       );
   };
 
-  // Handle form submission for registration
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     const inputEmail = emailRef.current?.value || "";
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
     const confirmPassword = confirmPasswordRef.current?.value || "";
-
-    console.log("Email:", inputEmail);
-    console.log("Username:", username);
-    console.log("Password:", password);
-    console.log("Confirm Password:", confirmPassword);
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -63,143 +65,177 @@ function Register() {
       return;
     }
 
-    try {
-      // Generate OTP in frontend
-      const otp = generateOTP();
+    const otp = generateOTP();
 
-      // Send OTP to backend and save OTP in the database
-      await axios.post("http://localhost:8888/api/auth/register", {
-        user_id: uuidv4(),
-        email: inputEmail,
-        username,
-        password,
-        otp,
-      });
+    setPendingUser({
+      user_id: uuidv4(),
+      email: inputEmail,
+      username,
+      password,
+      otp,
+    });
 
-      sendOTPEmail(inputEmail, otp);
-
-      setEmail(inputEmail);
-      setShowOTPField(true);
-    } catch (err) {
-      setError("Registration failed. Try again.");
-      setTimeout(() => setError(""), 3000);
-    }
+    sendOTPEmail(inputEmail, otp);
+    setEmail(inputEmail);
+    setShowOTPField(true);
   };
 
   const handleVerifyOTP = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage("Verifying...");
 
     const otp = otpRef.current?.value || "";
 
-    console.log("Received email:", email);
-    console.log("Received OTP:", otp);
+    if (!pendingUser) {
+      setError("No registration data found.");
+      return;
+    }
+
+    if (otp !== pendingUser.otp) {
+      setError("Invalid OTP. Try again.");
+      setMessage("Verify OTP");
+      setTimeout(() => setError(""), 3000);
+      return;
+    }
 
     try {
-      await axios.post("http://localhost:8888/api/auth/verify-email", {
-        email: email,
-        otp: otp,
+      await axios.post("http://localhost:8888/api/auth/register", {
+        ...pendingUser,
       });
 
-      setShowPopup(true);
-      setTimeout(() => {
-        setShowPopup(false);
-        navigate("/login");
-      }, 3000);
+      setMessage("Registration successful!");
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
-      setError("Invalid OTP. Try again.");
+      setMessage("Registration failed.");
+      setError("Something went wrong.");
       setTimeout(() => setError(""), 3000);
     }
   };
 
   return (
-    <div className="flex flex-col justify-start items-center border border-white bg-white/10 backdrop-blur-md w-[36%] h-auto py-[2rem] bg-white rounded-2xl shadow-inner sm:py-12 md:py-16 lg:py-[3rem] px-[3rem]">
-      <div className="flex justify-center items-start h-auto w-full">
-        <h1 className="text-white text-[4rem]">Register</h1>
+    <div
+      className="flex flex-col justify-start items-center border border-gray-400 bg-black/5 backdrop-blur-md 
+      w-[90%] sm:w-[48%] max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl 
+      py-8 sm:py-12 md:py-16 lg:py-20 
+      px-6 sm:px-8 md:px-12 lg:px-16 
+      rounded-2xl shadow-inner"
+    >
+      {/* Header */}
+      <div className="flex justify-center items-start w-full">
+        <h1 className="text-white text-4xl sm:text-5xl md:text-6xl">
+          Register
+        </h1>
       </div>
+
       {!showOTPField ? (
         <>
-          <div className="mt-[4rem] w-[66%]">
+          <div className="mt-8 sm:mt-12 w-full sm:w-3/4">
             <form
               onSubmit={handleSubmit}
-              className="flex gap-[3rem] text-[1.5rem] text-white flex-col justify-center items-center"
+              className="flex gap-8 text-lg sm:text-xl text-white flex-col justify-center items-center"
             >
+              {/* Email */}
               <div className="relative w-full">
                 <input
                   ref={emailRef}
-                  className="w-full h-[4rem] bg-transparent focus:outline-none border-b-2 border-white text-white text-lg placeholder-transparent peer"
+                  className="w-full h-12 sm:h-14 bg-transparent focus:outline-none border-b-2 border-gray-200 text-white text-base sm:text-lg placeholder-transparent peer"
                   type="email"
                   placeholder="Email"
                 />
-                <label className="absolute left-0 text-[1.25rem] text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
                   email
                 </label>
               </div>
+
+              {/* Username */}
               <div className="relative w-full">
                 <input
                   ref={usernameRef}
-                  className="w-full h-[4rem] bg-transparent focus:outline-none border-b-2 border-white text-white text-lg placeholder-transparent peer"
+                  className="w-full h-12 sm:h-14 bg-transparent focus:outline-none border-b-2 border-gray-200 text-white text-base sm:text-lg placeholder-transparent peer"
                   type="text"
                   placeholder="Username"
                 />
-                <label className="absolute left-0 text-[1.25rem] text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
                   username
                 </label>
               </div>
-              <div className="relative w-full">
-                <input
-                  ref={passwordRef}
-                  className="w-full h-[4rem] bg-transparent focus:outline-none border-b-2 border-white text-white text-lg placeholder-transparent peer"
-                  type="password"
-                  placeholder="Password"
-                />
-                <label className="absolute left-0 text-[1.25rem] text-gray-400 transition-all duration-300 transform -translate-y-6  peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
-                  password
-                </label>
+
+              {/* Password */}
+              <div className="flex justify-between gap-6">
+                <div className="relative w-full">
+                  <input
+                    ref={passwordRef}
+                    className="w-full h-12 sm:h-14 bg-transparent focus:outline-none border-b-2 border-gray-200 text-white text-base sm:text-lg placeholder-transparent peer"
+                    type="password"
+                    placeholder="Password"
+                  />
+                  <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                    password
+                  </label>
+                </div>
+
+                {/* Confirm Password */}
+                <div className="relative w-full">
+                  <input
+                    ref={confirmPasswordRef}
+                    className="w-full h-12 sm:h-14 bg-transparent focus:outline-none border-b-2 border-gray-200 text-white text-base sm:text-lg placeholder-transparent peer"
+                    type="password"
+                    placeholder="Confirm Password"
+                  />
+                  <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                    confirm password
+                  </label>
+                </div>
               </div>
-              <div className="relative w-full">
-                <input
-                  ref={confirmPasswordRef}
-                  className="w-full h-[4rem] bg-transparent focus:outline-none border-b-2 border-white text-white text-lg placeholder-transparent peer"
-                  type="password"
-                  placeholder="Confirm Password"
-                />
-                <label className="absolute left-0 text-[1.25rem] text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
-                  confirm password
-                </label>
-              </div>
-              {error && <p className="text-red-500 text-[1.25rem]">{error}</p>}
+
+              {error && (
+                <p className="text-red-500 text-base sm:text-lg">{error}</p>
+              )}
+
               <button
                 type="submit"
-                className="w-full border-[1px] p-2 rounded-full mt-[2rem] hover:bg-white/15 duration-300"
+                className="w-full border p-2 sm:p-3 rounded-full mt-6 sm:mt-8 hover:bg-white/15 duration-300"
               >
                 Register
               </button>
             </form>
           </div>
+
           <a
             href="/login"
-            className="mt-6 text-white underline-offset-4 underline text-end w-[66%]"
+            className="mt-6 text-white underline-offset-4 underline text-sm sm:text-base text-end w-full sm:w-3/4"
           >
             Already have an account?
           </a>
         </>
       ) : (
-        <form onSubmit={handleVerifyOTP} className="w-full flex flex-col gap-4">
-          <h2 className="text-white text-xl font-semibold text-center">Enter OTP</h2>
-          <h2 className="text-white text-xl font-semibold text-center">OTP is sending to {email}</h2>
-          <input ref={otpRef} className="w-full h-12 bg-transparent border-b-2 border-white text-white text-2xl text-center placeholder-gray-500 focus:outline-none" type="text" maxLength={6} placeholder="" />
-          {error && <p className="text-red-500 text-center">{error}</p>}
-          <button type="submit" className="w-full bg-violet-600 hover:bg-violet-700 text-white py-2 rounded-full transition duration-300 text-lg font-semibold">Verify OTP</button>
-        </form>
-      )}
+        <form
+          onSubmit={handleVerifyOTP}
+          className="w-full sm:w-3/4 flex flex-col gap-4 sm:gap-6 mt-6"
+        >
+          <h2 className="text-white text-sm sm:text-lg text-center">
+            OTP is sent to : {email}
+          </h2>
+          <input
+            ref={otpRef}
+            className="w-full h-12 bg-transparent border-b-2 border-gray-200 text-white text-xl sm:text-2xl text-center placeholder-gray-500 focus:outline-none"
+            type="text"
+            maxLength={6}
+            placeholder="Enter OTP here"
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              target.value = target.value.replace(/\D/g, "");
+            }}
+          />
 
-      {showPopup && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black/50 flex justify-center items-center">
-          <div className="bg-white border rounded-lg shadow-lg p-6 w-[48%] text-center">
-            <h2 className="text-violet-600 text-2xl mb-4">Registration Successful!</h2>
-            <p className="text-violet-400">Redirecting to login . . .</p>
-          </div>
-        </div>
+          {error && <p className="text-red-500 text-center">{error}</p>}
+          <button
+            type="submit"
+            className="w-full bg-black/20 hover:bg-violet-700 text-white py-2 border  rounded-full transition duration-300 text-base sm:text-lg font-semibold"
+          >
+            {message}
+          </button>
+        </form>
       )}
     </div>
   );

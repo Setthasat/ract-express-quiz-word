@@ -3,6 +3,7 @@ import create from "zustand";
 interface User {
   user_id: string;
   email: string;
+  username: string; // add username here
 }
 
 interface AppState {
@@ -14,14 +15,17 @@ interface AppState {
 
 export const useStore = create<AppState>((set, get) => ({
   user: JSON.parse(localStorage.getItem("user") || "null"),
+
   setUser: (user) => {
     localStorage.setItem("user", JSON.stringify(user));
     set({ user });
   },
+
   logout: () => {
     localStorage.removeItem("user");
     set({ user: null });
   },
+
   getUserId: () => {
     const user = get().user;
     return user ? user.user_id : null;
