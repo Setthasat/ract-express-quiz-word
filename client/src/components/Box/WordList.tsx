@@ -67,7 +67,7 @@ function WordList({ words, isLoading }: WordListProps) {
       <div className="p-3 sm:p-6 w-full flex flex-col justify-center items-center">
         <div className="w-full bg-slate-900 rounded-3xl shadow-xl shadow-black/40 p-4 sm:p-6 flex flex-col h-[20rem] sm:h-[32rem]">
           <div className="text-center mb-4 sm:mb-6">
-            <h1 className="text-white text-2xl sm:text-4xl font-extrabold tracking-wide text-purple-300">
+            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-wide text-purple-300">
               WORD LIST
             </h1>
           </div>
@@ -83,7 +83,7 @@ function WordList({ words, isLoading }: WordListProps) {
     <div className="p-3 sm:p-6 w-full flex flex-col justify-center items-center">
       <div className="w-full bg-slate-900 rounded-3xl shadow-xl shadow-black/40 p-4 sm:p-6 flex flex-col min-h-[20rem] sm:min-h-[32rem]">
         <div className="text-center mb-4 sm:mb-6">
-          <h1 className="text-white text-2xl sm:text-4xl font-extrabold tracking-wide text-purple-300">
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-wide text-purple-300">
             WORD LIST
           </h1>
         </div>

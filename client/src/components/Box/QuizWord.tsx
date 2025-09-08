@@ -96,12 +96,18 @@ function QuizWord() {
           choiceLength: choiceLengthInt,
         };
         const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/api/quiz`,
+          `${import.meta.env.VITE_SERVER_URL}/quiz`,
           quizReq
         );
         console.log(response.data.data);
         setQuizData(response.data.data);
+
+        // Show "Quiz Generated!" for 3 seconds
         setButtonState({ color: "bg-green-500", text: "Quiz Generated!" });
+        setTimeout(() => {
+          setButtonState({ color: "", text: "Start Quiz" });
+        }, 3000);
+
         setShowQuizModal(true); // Show the modal
       }
     } catch (error) {
@@ -130,7 +136,7 @@ function QuizWord() {
         <div className="w-full max-w-6xl bg-slate-900 rounded-3xl shadow-xl shadow-black/40 p-6 flex flex-col min-h-[32rem]">
           {/* Header */}
           <div className="text-center mb-6">
-            <h1 className="text-white text-4xl font-extrabold tracking-wide text-purple-300">
+            <h1 className="text-4xl font-extrabold tracking-wide text-purple-300">
               QUIZ WORDS
             </h1>
           </div>
@@ -214,7 +220,7 @@ function QuizWord() {
 
             {/* Modal Header */}
             <div className="text-center mb-4 sm:mb-6">
-              <h2 className="text-white text-xl sm:text-3xl font-bold text-purple-300">
+              <h2 className="text-xl sm:text-3xl font-bold text-purple-300">
                 Quiz Time!
               </h2>
             </div>
