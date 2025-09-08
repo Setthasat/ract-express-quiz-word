@@ -39,7 +39,7 @@ export class WordRepository {
     }
 
     const wordIndex = user.words.findIndex(
-      (w) =>
+      (w : IWord) =>
         w.word.toLowerCase() === word.toLowerCase() &&
         w.part_of_speech.toLowerCase() === part_of_speech.toLowerCase()
     );
@@ -69,7 +69,7 @@ export class WordRepository {
     }
 
     const foundWord = user.words.find(
-      (w) =>
+      (w: IWord) =>
         w.word.toLowerCase() === word.toLowerCase() &&
         w.part_of_speech.toLowerCase() === part_of_speech.toLowerCase()
     );
