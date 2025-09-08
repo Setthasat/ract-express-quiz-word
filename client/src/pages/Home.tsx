@@ -34,7 +34,7 @@ function Home() {
         {/* Bottom text */}
         <div className="flex justify-center items-center text-center fixed bottom-4 w-full z-10">
           <p className="text-sm sm:text-base md:text-xl text-white underline underline-offset-8 fade-loop">
-            Click HERE to get started
+            Click <span className="text-yellow-500">HERE</span> to get started
           </p>
         </div>
       </div>

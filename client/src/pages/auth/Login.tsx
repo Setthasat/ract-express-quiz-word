@@ -109,8 +109,8 @@ function Login() {
 
         {/* Register Link */}
         <p
-          onClick={() => navigate("/Register")}
-          className="mt-6 text-white underline-offset-4 underline text-sm sm:text-base text-end w-full sm:w-3/4"
+          onClick={() => navigate("/register")}
+          className="mt-6 text-white cursor-pointer underline-offset-4 underline text-sm sm:text-base text-end w-full sm:w-3/4"
         >
           Create an account?
         </p>

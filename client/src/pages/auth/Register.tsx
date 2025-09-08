@@ -100,11 +100,10 @@ function Register() {
     }
 
     try {
-
       await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/register`, {
         ...pendingUser,
       });
-      
+
       await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/verify-email`, {
         email,
         otp,
@@ -210,12 +209,12 @@ function Register() {
               </form>
             </div>
 
-            <a
-              href="/login"
-              className="mt-6 text-white underline-offset-4 underline text-sm sm:text-base text-end w-full sm:w-3/4"
+            <p
+              onClick={() => navigate("/login")}
+              className="mt-6 text-white cursor-pointer underline-offset-4 underline text-sm sm:text-base text-end w-full sm:w-3/4"
             >
               Already have an account?
-            </a>
+            </p>
           </>
         ) : (
           <form
