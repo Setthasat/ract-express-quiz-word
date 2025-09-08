@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import emailjs from "emailjs-com";
+import Background from "../../components/Background";
 
 function Register() {
   const emailRef = useRef<HTMLInputElement>(null);
@@ -113,8 +114,10 @@ function Register() {
   };
 
   return (
+    <div className="flex justify-center items-center w-screen h-screen">
+    <Background />
     <div
-      className="flex flex-col justify-start items-center border border-gray-400 bg-black/5 backdrop-blur-md 
+      className="flex flex-col justify-start items-center bg-black/5 backdrop-blur-md 
       w-[90%] sm:w-[48%] max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-4xl 
       py-8 sm:py-12 md:py-16 lg:py-20 
       px-6 sm:px-8 md:px-12 lg:px-16 
@@ -142,7 +145,7 @@ function Register() {
                   type="email"
                   placeholder="Email"
                 />
-                <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                <label className="absolute left-0 text-base sm:text-lg text-gray-200 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-200 peer-focus:-translate-y-6 peer-focus:text-white">
                   email
                 </label>
               </div>
@@ -155,7 +158,7 @@ function Register() {
                   type="text"
                   placeholder="Username"
                 />
-                <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                <label className="absolute left-0 text-base sm:text-lg text-gray-200 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-200 peer-focus:-translate-y-6 peer-focus:text-white">
                   username
                 </label>
               </div>
@@ -169,7 +172,7 @@ function Register() {
                     type="password"
                     placeholder="Password"
                   />
-                  <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                  <label className="absolute left-0 text-base sm:text-lg text-gray-200 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-200 peer-focus:-translate-y-6 peer-focus:text-white">
                     password
                   </label>
                 </div>
@@ -182,7 +185,7 @@ function Register() {
                     type="password"
                     placeholder="Confirm Password"
                   />
-                  <label className="absolute left-0 text-base sm:text-lg text-gray-400 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-white">
+                  <label className="absolute left-0 text-base sm:text-lg text-gray-200 transition-all duration-300 transform -translate-y-6 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-200 peer-focus:-translate-y-6 peer-focus:text-white">
                     confirm password
                   </label>
                 </div>
@@ -237,6 +240,7 @@ function Register() {
           </button>
         </form>
       )}
+    </div>
     </div>
   );
 }

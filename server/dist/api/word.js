@@ -172,7 +172,7 @@ class Api {
                         }
                     }
                     this.shuffleArray(choices);
-                    quizQuestions.push({ word: correctWord.word, choices, correctAnswer: correctWord.definition });
+                    quizQuestions.push({ word: correctWord.word, part_of_speech: correctWord.part_of_speech, choices, correctAnswer: correctWord.definition });
                 }
                 baseResponseInst.setValue(200, "Quiz generated successfully", quizQuestions);
                 const responseData = baseResponseInst.buildResponse();

@@ -1,50 +1,44 @@
 import { useState, useEffect } from 'react';
-import { useStore } from '../../store/store';
-import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios';
-import Hamburger from '../Hamburger';
+interface Word {
+  id: string;
+  user_id: string;
+  word: string;
+  part_of_speech: string;
+  definition: string;
+  isOptimistic?: boolean;
+}
 
-function WordList() {
+interface WordListProps {
+  words: Word[];
+  isLoading: boolean;
+}
 
-  const [data, setData] = useState<Array<any>>([]);
+function WordList({ words, isLoading }: WordListProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const itemsPerPage = 3;
-
-  const getUserId = useStore((state) => state.getUserId);
-  const navigate = useNavigate();
-  const userID = getUserId();
-
-  useEffect(() => {
-    if (!getUserId()) {
-      navigate("/login");
+  
+  // Mobile: 1 item per page, Tablet: 2 items, Desktop: 2 items
+  const getItemsPerPage = () => {
+    if (typeof window !== 'undefined') {
+      if (window.innerWidth < 640) return 1; // Mobile
+      return 2; // Tablet and Desktop
     }
-  }, [getUserId, navigate]);
-
-  const fetchData = async () => {
-
-    const userData = {
-      user_id: userID
-    };
-
-    try {
-      const response = await axios.post("http://localhost:8888/api/get/words", userData);
-      const fetchedData = response.data.data;
-      if (Array.isArray(fetchedData)) {
-        setData(fetchedData);
-      } else {
-        console.error("Fetched data is not an array");
-      }
-    } catch (error) {
-      console.error("Error fetching data", error);
-    }
+    return 2;
   };
 
+  const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
+
   useEffect(() => {
-    fetchData();
+    const handleResize = () => {
+      setItemsPerPage(getItemsPerPage());
+      setCurrentIndex(0); // Reset to first page on resize
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const totalPages = Math.ceil(words.length / itemsPerPage);
 
   const handleNext = () => {
     if (currentIndex < totalPages - 1) {
@@ -58,74 +52,124 @@ function WordList() {
     }
   };
 
-  const currentItems = data.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage);
+  const currentItems = words.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage);
+
+  // Auto-navigate to last page when new word is added
+  useEffect(() => {
+    if (words.length > 0) {
+      const newTotalPages = Math.ceil(words.length / itemsPerPage);
+      if (currentIndex >= newTotalPages - 1) {
+        setCurrentIndex(Math.max(0, newTotalPages - 1));
+      }
+    }
+  }, [words.length, currentIndex, itemsPerPage]);
+
+  if (isLoading) {
+    return (
+      <div className="p-3 sm:p-6 w-full flex flex-col justify-center items-center">
+        <div className="w-full bg-slate-900 rounded-3xl shadow-xl shadow-black/40 p-4 sm:p-6 flex flex-col h-[20rem] sm:h-[32rem]">
+          <div className="text-center mb-4 sm:mb-6">
+            <h1 className="text-white text-2xl sm:text-4xl font-extrabold tracking-wide text-purple-300">
+              WORD LIST
+            </h1>
+          </div>
+          <div className="flex justify-center items-center flex-grow">
+            <div className="w-8 h-8 sm:w-12 sm:h-12 border-4 border-t-transparent border-purple-400 rounded-full animate-spin"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className='flex flex-col justify-center items-center border border-white bg-white/5 backdrop-blur-md w-full sm:w-3/4 md:w-2/3 lg:w-1/2 max-h-[55rem] h-[55rem] bg-white rounded-2xl shadow-inner py-8 sm:py-12 md:py-16 lg:py-[12rem]'>
-      <div className='absolute top-12 left-12'>
-        <Hamburger />
-      </div>
-      <div className='grid justify-center items-start h-full px-4 sm:px-6 md:px-8 lg:px-16'>
-        <div className='border-b-2 w-full max-w-4xl flex items-center justify-center pb-4 md:pb-6 lg:pb-8 text-center'>
-          <p className='text-white font-bold -mt-[2rem] text-2xl sm:text-3xl md:text-4xl lg:text-5xl'>
+    <div className="p-3 sm:p-6 w-full flex flex-col justify-center items-center">
+      <div className="w-full bg-slate-900 rounded-3xl shadow-xl shadow-black/40 p-4 sm:p-6 flex flex-col min-h-[20rem] sm:min-h-[32rem]">
+        <div className="text-center mb-4 sm:mb-6">
+          <h1 className="text-white text-2xl sm:text-4xl font-extrabold tracking-wide text-purple-300">
             WORD LIST
-          </p>
+          </h1>
         </div>
 
-        <div className='w-full max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+        <div className="flex-grow">
           {currentItems.length > 0 ? (
-            currentItems.map((wordItem) => (
-              <div
-                key={wordItem.id}
-                className='group relative text-white p-6 min-w-[16rem] w-full h-[20rem] mt-8 rounded-2xl border border-white/20 bg-white/10 backdrop-blur-md shadow-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl'
-              >
-                <div className='relative z-10 flex flex-col  h-full'>
-                  <p className='font-bold text-xl justify-between flex border-b border-white/20 pb-2 mb-3 truncate'>
-                    {wordItem.word}{' '}
-                    <span className='font-medium text-gray-300'>
-                      ({wordItem.part_of_speech})
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 h-full">
+              {currentItems.map((wordItem) => (
+                <div
+                  key={wordItem.id}
+                  className={`bg-white/5 rounded-xl shadow-inner p-4 sm:p-6 flex flex-col h-[16rem] sm:h-[20rem] transition-all duration-300 hover:bg-white/10 hover:shadow-lg border border-white/10 ${
+                    wordItem.isOptimistic ? 'opacity-75 animate-pulse' : ''
+                  }`}
+                >
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 pb-3 border-b border-white/20">
+                    <h3 className="text-white font-bold text-lg sm:text-xl truncate flex-grow mb-2 sm:mb-0">
+                      {wordItem.word}
+                      {wordItem.isOptimistic && (
+                        <span className="ml-2 text-xs text-yellow-400">Adding...</span>
+                      )}
+                    </h3>
+                    <span className="inline-block bg-purple-600/20 text-purple-300 text-xs font-semibold px-2 sm:px-3 py-1 rounded-full sm:ml-3 whitespace-nowrap w-fit">
+                      {wordItem.part_of_speech}
                     </span>
-                  </p>
-                  <p className='flex-1 text-lg text-gray-200 leading-relaxed overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-purple-400/50 scrollbar-track-transparent pr-1'>
-                    {wordItem.definition}
-                  </p>
+                  </div>
+                  
+                  <div className="flex-grow overflow-y-auto">
+                    <p className="text-gray-200 text-sm sm:text-base leading-relaxed whitespace-pre-wrap break-words">
+                      {wordItem.definition}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))
+              ))}
+              
+              {/* Fill empty slots on desktop/tablet */}
+              {Array.from({ length: Math.max(0, itemsPerPage - currentItems.length) }).map((_, index) => (
+                <div key={`empty-${index}`} className="hidden sm:block invisible"></div>
+              ))}
+            </div>
           ) : (
-            <div className='flex justify-center items-center col-span-full h-[16rem]'>
-              <p className='text-white text-center text-3xl'>No words found</p>
+            <div className="flex justify-center items-center h-full">
+              <div className="text-center text-white/50">
+                <p className="text-lg sm:text-2xl mb-2">No words found</p>
+                <p className="text-xs sm:text-sm">Start by adding some words to your collection</p>
+              </div>
             </div>
           )}
         </div>
 
-        <div className='flex items-center justify-between mt-4'>
+        <div className="flex items-center justify-between mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-white/10">
           <button
             onClick={handlePrev}
             disabled={currentIndex === 0}
-            className='bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 w-[6rem] text-white px-4 py-2 rounded disabled:opacity-50'
+            className={`px-3 sm:px-6 py-2 rounded-lg text-white font-medium transition-all shadow-lg text-sm sm:text-base ${
+              currentIndex === 0
+                ? "bg-white/5 cursor-not-allowed opacity-50"
+                : "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 hover:shadow-xl"
+            }`}
           >
-            Previous
+            Prev
           </button>
-          <div className='text-center  text-white'>
-
+          
+          <div className="text-white font-medium bg-white/10 px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base">
             {currentItems.length > 0 ? (
               <>{currentIndex + 1} / {totalPages}</>
             ) : (
               <>- / -</>
             )}
           </div>
+          
           <button
             onClick={handleNext}
-            disabled={currentIndex === totalPages - 1 || currentItems.length == 0}
-            className='bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 w-[6rem] text-white px-4 py-2 rounded disabled:opacity-50'
+            disabled={currentIndex === totalPages - 1 || currentItems.length === 0}
+            className={`px-3 sm:px-6 py-2 rounded-lg text-white font-medium transition-all shadow-lg text-sm sm:text-base ${
+              currentIndex === totalPages - 1 || currentItems.length === 0
+                ? "bg-white/5 cursor-not-allowed opacity-50"
+                : "bg-gradient-to-r from-purple-500 to-violet-500 hover:from-purple-600 hover:to-violet-600 hover:shadow-xl"
+            }`}
           >
             Next
           </button>
         </div>
       </div>
     </div>
-
   );
 }
 

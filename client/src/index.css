@@ -21,3 +21,14 @@
 .fade-loop {
   animation: fadeLoop 4s infinite;
 }
+
+html, body {
+  z-index: -22;
+  background-color: #333446;
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}

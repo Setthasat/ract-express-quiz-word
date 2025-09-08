@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { MoveUpRight } from "lucide-react";
+import Background from "../components/Background";
 
 function Home() {
   const navigate = useNavigate();
@@ -13,6 +14,10 @@ function Home() {
       className="flex justify-center items-center flex-col w-screen h-screen cursor-pointer px-4"
       onClick={handleClick}
     >
+      <div className="absolute h-screen w-screen z-[-1]">
+        {/* @ts-ignore */}
+        <Background />
+      </div>
       {/* Heading */}
       <h1 className="text-xl sm:text-3xl md:text-5xl font-bold text-white text-center">
         GET START WITH <span className="text-yellow-500">"QUIZ WORD"</span>
