@@ -84,7 +84,7 @@ export default function Box() {
   return (
     <div className="flex justify-center items-start w-full min-h-full bg-[#333446] overflow-y-auto">
       <Navbar />
-      <div className="relative flex flex-col justify-start items-center max-w-screen min-h-full py-4 px-2 sm:px-4">
+      <div className="relative flex flex-col justify-start items-center max-w-screenÍ min-h-full py-4 px-2 sm:px-4">
         <div className="w-full mb-4">
           <AddWord
             onAddWord={addWordOptimistically}
