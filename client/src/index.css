@@ -23,7 +23,6 @@
 }
 
 html, body {
-  z-index: -22;
   background-color: #333446;
   min-height: 100%;
 }

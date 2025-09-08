@@ -34,7 +34,7 @@ class WordRepository {
                 console.log(`User with ID ${user_id} not found`);
                 return null;
             }
-            const existingWord = user.words.find(w => w.word.toLowerCase() === wordData.word.toLowerCase() &&
+            const existingWord = user.words.find((w) => w.word.toLowerCase() === wordData.word.toLowerCase() &&
                 w.part_of_speech.toLowerCase() === wordData.part_of_speech.toLowerCase());
             if (existingWord) {
                 console.log(`Word "${wordData.word}" already exists for user with ID ${user_id}`);
@@ -53,7 +53,7 @@ class WordRepository {
                 console.log(`User with ID ${user_id} not found`);
                 return null;
             }
-            const wordIndex = user.words.findIndex(w => w.word.toLowerCase() === word.toLowerCase() &&
+            const wordIndex = user.words.findIndex((w) => w.word.toLowerCase() === word.toLowerCase() &&
                 w.part_of_speech.toLowerCase() === part_of_speech.toLowerCase());
             if (wordIndex === -1) {
                 console.log(`Word "${word}" with part of speech "${part_of_speech}" not found for user with ID ${user_id}`);
@@ -72,7 +72,7 @@ class WordRepository {
                 console.log(`User with ID ${user_id} not found`);
                 return null;
             }
-            const foundWord = user.words.find(w => w.word.toLowerCase() === word.toLowerCase() &&
+            const foundWord = user.words.find((w) => w.word.toLowerCase() === word.toLowerCase() &&
                 w.part_of_speech.toLowerCase() === part_of_speech.toLowerCase());
             return foundWord || null;
         });
