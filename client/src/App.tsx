@@ -1,6 +1,4 @@
-import AddWord from "./components/Box/AddWord";
 import QuizWord from "./components/Box/QuizWord";
-import WordList from "./components/Box/WordList";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Home from "./pages/Home";

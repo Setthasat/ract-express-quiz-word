@@ -1,5 +1,5 @@
 import { useStore } from "../store/store";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import AddWord from "../components/Box/AddWord";
@@ -43,7 +43,7 @@ export default function Box() {
     try {
       setIsLoading(true);
       const response = await axios.post(
-        "http://localhost:8888/api/get/words",
+        `${import.meta.env.VITE_SERVER_URL}/get/words`,
         userData
       );
       const fetchedData = response.data.data;
@@ -85,7 +85,6 @@ export default function Box() {
     <div className="flex justify-center items-start w-full min-h-full bg-[#333446] overflow-y-auto">
       <Navbar />
       <div className="relative flex flex-col justify-start items-center w-full min-h-full py-4 px-2 sm:px-4">
-        {/* Add Word Section - Always at top */}
         <div className="w-full mb-4">
           <AddWord
             onAddWord={addWordOptimistically}
@@ -93,15 +92,10 @@ export default function Box() {
             onReplaceWord={replaceWord}
           />
         </div>
-
-        {/* Main Content - Mobile: Stack vertically, Desktop: Side by side */}
         <div className="w-full flex flex-col lg:flex-row lg:justify-between lg:items-start gap-4">
-          {/* Word List */}
           <div className="w-full lg:w-1/2">
             <WordList words={words} isLoading={isLoading} />
           </div>
-          
-          {/* Quiz Section */}
           <div className="w-full lg:w-1/2">
             <QuizWord />
           </div>

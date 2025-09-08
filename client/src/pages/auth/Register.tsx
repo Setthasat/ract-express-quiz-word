@@ -100,7 +100,7 @@ function Register() {
     }
 
     try {
-      await axios.post("http://localhost:8888/api/auth/register", {
+      await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/register`, {
         ...pendingUser,
       });
 

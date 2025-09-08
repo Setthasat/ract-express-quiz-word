@@ -57,7 +57,7 @@ function QuizWord() {
     try {
       setIsLoading(true);
       const allDataLength = await axios.post(
-        "http://localhost:8888/api/get/words",
+        `${import.meta.env.VITE_SERVER_URL}/get/words`,
         userData
       );
       const availableWordsCount = allDataLength.data.data.length;
@@ -96,7 +96,7 @@ function QuizWord() {
           choiceLength: choiceLengthInt,
         };
         const response = await axios.post(
-          "http://localhost:8888/api/quiz",
+          `${import.meta.env.VITE_SERVER_URL}/api/quiz`,
           quizReq
         );
         console.log(response.data.data);

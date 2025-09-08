@@ -17,11 +17,10 @@ interface WordListProps {
 function WordList({ words, isLoading }: WordListProps) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   
-  // Mobile: 1 item per page, Tablet: 2 items, Desktop: 2 items
   const getItemsPerPage = () => {
     if (typeof window !== 'undefined') {
-      if (window.innerWidth < 640) return 1; // Mobile
-      return 2; // Tablet and Desktop
+      if (window.innerWidth < 640) return 1;
+      return 2;
     }
     return 2;
   };
@@ -31,7 +30,7 @@ function WordList({ words, isLoading }: WordListProps) {
   useEffect(() => {
     const handleResize = () => {
       setItemsPerPage(getItemsPerPage());
-      setCurrentIndex(0); // Reset to first page on resize
+      setCurrentIndex(0);
     };
 
     window.addEventListener('resize', handleResize);
@@ -54,7 +53,6 @@ function WordList({ words, isLoading }: WordListProps) {
 
   const currentItems = words.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage);
 
-  // Auto-navigate to last page when new word is added
   useEffect(() => {
     if (words.length > 0) {
       const newTotalPages = Math.ceil(words.length / itemsPerPage);

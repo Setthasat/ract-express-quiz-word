@@ -32,23 +32,20 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
     }
   }, [userID, navigate]);
 
-  // Create word form state with safe user_id handling
   const [isComplete, setIsComplete] = useState(false);
   const [isError, setIsError] = useState(false);
   const [Word, setWord] = useState({
-    user_id: userID || "", // Provide empty string fallback
+    user_id: userID || "",
     word: "",
     part_of_speech: "",
   });
 
-  // Update user_id in form when userID changes
   useEffect(() => {
     if (userID) {
       setWord(prev => ({ ...prev, user_id: userID }));
     }
   }, [userID]);
 
-  // Don't render form if no user ID
   if (!userID) {
     return (
       <div className="p-6 w-full flex flex-col sm:flex-row justify-between items-start gap-6 bg-[#333446] mt-[8rem]">
@@ -79,7 +76,6 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // Type guard to ensure userID is not null
     if (!userID) {
       console.error("User ID is not available");
       return;
@@ -91,7 +87,6 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
       part_of_speech: Word.part_of_speech,
     };
 
-    // Get definition from dictionary API for optimistic update
     let definition = "Definition not available";
     if (dictData) {
       const meaning = dictData.meanings?.find(
@@ -102,11 +97,10 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
       }
     }
 
-    // Create optimistic word object
     const tempId = `temp-${Date.now()}`;
     const optimisticWord: Word = {
       id: tempId,
-      user_id: userID, // Now guaranteed to be string
+      user_id: userID,
       word: Word.word,
       part_of_speech: Word.part_of_speech,
       definition: definition,
@@ -114,12 +108,10 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
     };
 
     try {
-      // Optimistically add to list immediately
       onAddWord(optimisticWord);
 
-      // Make API call
       const api = await axios.post(
-        "http://localhost:8888/api/create/word",
+        `${import.meta.env.VITE_SERVER_URL}/create/word`,
         wordData
       );
 

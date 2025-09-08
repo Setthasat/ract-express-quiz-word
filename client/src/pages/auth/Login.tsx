@@ -21,7 +21,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8888/api/auth/login",
+        `${import.meta.env.VITE_SERVER_URL}/auth/login`,
         user
       );
       const userData = response.data.data;
