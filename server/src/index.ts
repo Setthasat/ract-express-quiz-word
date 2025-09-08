@@ -30,7 +30,6 @@ if (process.env.DB_URL) {
     console.log("can't find DB_URL");
 }
 
-//@ts-ignore
 const WordRepositoryInst = new WordRepository();
 const ApiInst = new Api(WordRepositoryInst);
 const AuthInst = new Auth();
