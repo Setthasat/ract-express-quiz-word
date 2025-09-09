@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useStore } from "../../store/store";
 
 interface Word {
   id: string;
@@ -15,30 +17,6 @@ interface WordListProps {
 }
 
 function WordList({ words, isLoading }: WordListProps) {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  
-  const getItemsPerPage = () => {
-    if (typeof window !== 'undefined') {
-      if (window.innerWidth < 640) return 1;
-      return 2;
-    }
-    return 2;
-  };
-
-  const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
-
-  useEffect(() => {
-    const handleResize = () => {
-      setItemsPerPage(getItemsPerPage());
-      setCurrentIndex(0);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const totalPages = Math.ceil(words.length / itemsPerPage);
-
   const handleNext = () => {
     if (currentIndex < totalPages - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -50,18 +28,70 @@ function WordList({ words, isLoading }: WordListProps) {
       setCurrentIndex(currentIndex - 1);
     }
   };
+  const getUserId = useStore((state) => state.getUserId);
+  const userID = getUserId();
 
-  const currentItems = words.slice(currentIndex * itemsPerPage, (currentIndex + 1) * itemsPerPage);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const getItemsPerPage = () => {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth < 640) return 1;
+      return 2;
+    }
+    return 2;
+  };
+
+  const [itemsPerPage, setItemsPerPage] = useState(getItemsPerPage());
+
+  const [localWords, setLocalWords] = useState<Word[]>(words);
 
   useEffect(() => {
-    if (words.length > 0) {
-      const newTotalPages = Math.ceil(words.length / itemsPerPage);
+    setLocalWords(words);
+  }, [words]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setItemsPerPage(getItemsPerPage());
+      setCurrentIndex(0);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const handleDelete = async (wordItem: Word) => {
+    const prevWords = [...localWords];
+    setLocalWords((ws) => ws.filter((w) => w.id !== wordItem.id));
+    try {
+      await axios.delete(`${import.meta.env.VITE_SERVER_URL}/delete/word`, {
+        data: {
+          user_id: userID,
+          word: wordItem.word,
+          part_of_speech: wordItem.part_of_speech,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      setLocalWords(prevWords);
+      alert("Error deleting word");
+    }
+  };
+
+  const totalPages = Math.ceil(localWords.length / itemsPerPage);
+  const currentItems = localWords.slice(
+    currentIndex * itemsPerPage,
+    (currentIndex + 1) * itemsPerPage
+  );
+
+  useEffect(() => {
+    if (localWords.length > 0) {
+      const newTotalPages = Math.ceil(localWords.length / itemsPerPage);
       if (currentIndex >= newTotalPages - 1) {
         setCurrentIndex(Math.max(0, newTotalPages - 1));
       }
     }
-  }, [words.length, currentIndex, itemsPerPage]);
-
+  }, [localWords.length, currentIndex, itemsPerPage]);
   if (isLoading) {
     return (
       <div className="p-3 sm:p-6 w-full flex flex-col justify-center items-center">
@@ -91,43 +121,60 @@ function WordList({ words, isLoading }: WordListProps) {
         <div className="flex-grow">
           {currentItems.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6 h-full">
-              {currentItems.map((wordItem) => (
+              {currentItems.map((wordItem, idx) => (
                 <div
-                  key={wordItem.id}
+                  key={
+                    wordItem.id ||
+                    `${wordItem.word}-${wordItem.part_of_speech}-${idx}`
+                  }
                   className={`bg-white/5 rounded-xl shadow-inner p-4 sm:p-6 flex flex-col h-[16rem] sm:h-[20rem] transition-all duration-300 hover:bg-white/10 hover:shadow-lg border border-white/10 ${
-                    wordItem.isOptimistic ? 'opacity-75 animate-pulse' : ''
+                    wordItem.isOptimistic ? "opacity-75 animate-pulse" : ""
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-3 sm:mb-4 pb-3 border-b border-white/20">
                     <h3 className="text-white font-bold text-lg sm:text-xl truncate flex-grow mb-2 sm:mb-0">
                       {wordItem.word}
                       {wordItem.isOptimistic && (
-                        <span className="ml-2 text-xs text-yellow-400">Adding...</span>
+                        <span className="ml-2 text-xs text-yellow-400">
+                          Adding...
+                        </span>
                       )}
                     </h3>
                     <span className="inline-block bg-purple-600/20 text-purple-300 text-xs font-semibold px-2 sm:px-3 py-1 rounded-full sm:ml-3 whitespace-nowrap w-fit">
                       {wordItem.part_of_speech}
                     </span>
                   </div>
-                  
+
                   <div className="flex-grow overflow-y-auto">
                     <p className="text-gray-200 text-sm sm:text-base leading-relaxed whitespace-pre-wrap break-words">
                       {wordItem.definition}
                     </p>
                   </div>
+                  <button
+                    className="text-white bg-red-600 p-2 rounded-md mt-2 hover:bg-red-700 transition-all"
+                    onClick={() => handleDelete(wordItem)}
+                  >
+                    DELETE
+                  </button>
                 </div>
               ))}
-              
-              {/* Fill empty slots on desktop/tablet */}
-              {Array.from({ length: Math.max(0, itemsPerPage - currentItems.length) }).map((_, index) => (
-                <div key={`empty-${index}`} className="hidden sm:block invisible"></div>
+
+              {Array.from({
+                length: Math.max(0, itemsPerPage - currentItems.length),
+              }).map((_, index) => (
+                <div
+                  key={`empty-${index}`}
+                  className="hidden sm:block invisible"
+                ></div>
               ))}
             </div>
           ) : (
             <div className="flex justify-center items-center h-full">
               <div className="text-center text-white/50">
                 <p className="text-lg sm:text-2xl mb-2">No words found</p>
-                <p className="text-xs sm:text-sm">Start by adding some words to your collection</p>
+                <p className="text-xs sm:text-sm">
+                  Start by adding some words to your collection
+                </p>
               </div>
             </div>
           )}
@@ -145,18 +192,22 @@ function WordList({ words, isLoading }: WordListProps) {
           >
             Prev
           </button>
-          
+
           <div className="text-white font-medium bg-white/10 px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base">
             {currentItems.length > 0 ? (
-              <>{currentIndex + 1} / {totalPages}</>
+              <>
+                {currentIndex + 1} / {totalPages}
+              </>
             ) : (
               <>- / -</>
             )}
           </div>
-          
+
           <button
             onClick={handleNext}
-            disabled={currentIndex === totalPages - 1 || currentItems.length === 0}
+            disabled={
+              currentIndex === totalPages - 1 || currentItems.length === 0
+            }
             className={`px-3 sm:px-6 py-2 rounded-lg text-white font-medium transition-all shadow-lg text-sm sm:text-base ${
               currentIndex === totalPages - 1 || currentItems.length === 0
                 ? "bg-white/5 cursor-not-allowed opacity-50"
