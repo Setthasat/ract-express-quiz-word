@@ -23,7 +23,7 @@ function Home() {
 
         {/* Subtext */}
         <div className="mt-4 w-full">
-          <p className="text-sm sm:text-base md:text-lg text-gray-100 flex justify-center items-center gap-2 truncate">
+          <p className="text-[11.2px] sm:text-base md:text-lg text-gray-100 flex justify-center items-center gap-2 truncate">
             <span className="bg-white text-yellow-500 py-1 px-2 rounded-md flex items-center gap-1 text-xs sm:text-base md:text-lg">
               Level up <MoveUpRight size={16} />
             </span>
