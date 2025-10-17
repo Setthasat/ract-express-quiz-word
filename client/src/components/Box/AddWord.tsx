@@ -42,7 +42,7 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
 
   useEffect(() => {
     if (userID) {
-      setWord(prev => ({ ...prev, user_id: userID }));
+      setWord((prev) => ({ ...prev, user_id: userID }));
     }
   }, [userID]);
 
@@ -51,7 +51,9 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
       <div className="p-6 w-full flex flex-col sm:flex-row justify-between items-start gap-6 bg-[#333446] mt-[8rem]">
         <div className="bg-slate-900 w-full rounded-3xl shadow-xl shadow-black/40 p-6 flex flex-col min-h-[25rem]">
           <div className="flex justify-center items-center flex-grow">
-            <p className="text-white text-center">Loading user information...</p>
+            <p className="text-white text-center">
+              Loading user information...
+            </p>
           </div>
         </div>
       </div>
@@ -104,7 +106,7 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
       word: Word.word,
       part_of_speech: Word.part_of_speech,
       definition: definition,
-      isOptimistic: true
+      isOptimistic: true,
     };
 
     try {
@@ -125,10 +127,10 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
         // API success - replace optimistic update with real data
         const realWord: Word = {
           ...api.data.data,
-          definition: definition // Keep the definition we fetched
+          definition: definition, // Keep the definition we fetched
         };
         onReplaceWord(tempId, realWord);
-        
+
         setIsComplete(true);
         setIsError(false);
         setTimeout(() => setIsComplete(false), 1000);
@@ -230,7 +232,9 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
 
       {/* RIGHT SIDE - Create Word Form */}
       <div className="w-full sm:w-2/3 h-[25rem] bg-slate-900 rounded-3xl p-6 shadow-lg shadow-black/30 flex flex-col">
-        <h1 className="text-white text-xl font-bold mb-4">CREATE WORD</h1>
+        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-wide text-purple-300">
+          ADD WORD
+        </h1>
         <form
           className="flex flex-col justify-center items-center gap-6 flex-grow"
           onSubmit={handleSubmit}
@@ -275,7 +279,11 @@ function AddWord({ onAddWord, onRemoveWord, onReplaceWord }: AddWordProps) {
                   : "bg-white/5 hover:bg-white/15 cursor-not-allowed"
               }`}
             >
-              {isError ? "Failed to add word" : isComplete ? "Word added!" : "Add Word"}
+              {isError
+                ? "Failed to add word"
+                : isComplete
+                ? "Word added!"
+                : "Add Word"}
             </button>
           )}
         </form>

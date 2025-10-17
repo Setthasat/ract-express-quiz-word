@@ -6,11 +6,10 @@ import Box from "./pages/Box";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
-
   return (
-    <div className="flex justify-between items-center w-screen max-w-screen min-h-screen">
+    <div className="flex justify-between items-center w-full max-w-screen min-h-screen">
       {/* main div */}
-      <div className="flex items-center justify-center w-screen min-h-screen ">
+      <div className="flex items-center justify-center w-full min-h-screen">
         <Routes>
           <Route index element={<Home />} />
           <Route path="/Homepage" element={<Box />} />

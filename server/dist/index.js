@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const path_1 = __importDefault(require("path"));
 const word_1 = require("./api/word");
 const auth_1 = require("./api/auth");
 const WordRepository_1 = require("./api/repository/WordRepository");
@@ -27,7 +28,7 @@ dotenv_1.default.config();
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(process.env.DB_URL);
-        console.log('Database connected ...');
+        console.log("Database connected ...");
     }
     catch (err) {
         console.error(err);
@@ -42,28 +43,41 @@ else {
 const WordRepositoryInst = new WordRepository_1.WordRepository();
 const ApiInst = new word_1.Api(WordRepositoryInst);
 const AuthInst = new auth_1.Auth();
-app.get('/', (req, res) => {
-    res.send('Hello, world!');
-});
+// ============================================
+// API ROUTES FIRST - BEFORE STATIC FILES!
+// ============================================
 //create
-app.post('/api/create/word', ApiInst.createWord);
+app.post("/api/create/word", ApiInst.createWord);
 //get words
-app.post('/api/get/words', ApiInst.getAllWords);
+app.post("/api/get/words", ApiInst.getAllWords);
 //get word
-app.post('/api/get/word', ApiInst.findWord);
-// delete word 
-app.delete('/api/delete/word', ApiInst.deleteWord);
-// quiz 
-app.post('/api/quiz', ApiInst.quiz);
-//auth
+app.post("/api/get/word", ApiInst.findWord);
+// delete word
+app.delete("/api/delete/word", ApiInst.deleteWord);
+// quiz
+app.post("/api/quiz", ApiInst.quiz);
 //auth register
-app.post('/api/auth/register', AuthInst.register);
+app.post("/api/auth/register", AuthInst.register);
 //auth login
-app.post('/api/auth/login', AuthInst.login);
+app.post("/api/auth/login", AuthInst.login);
 //auth verify
-app.post('/api/auth/verify-email', AuthInst.verifyOTP);
+app.post("/api/auth/verify-email", AuthInst.verifyOTP);
 //auth get all users
-app.get('/api/auth/users', AuthInst.getAllUsers);
+app.get("/api/auth/users", AuthInst.getAllUsers);
+// ============================================
+// STATIC FILES AND REACT ROUTING LAST!
+// ============================================
+// Serve static files from the React app
+const clientPath = path_1.default.resolve(__dirname, "..", "..", "client", "dist");
+console.log("Serving static files from:", clientPath);
+app.use(express_1.default.static(clientPath));
+// Handle React routing, return all requests to React app
+// THIS MUST BE LAST - it's a catch-all!
+app.get("*", (req, res) => {
+    const indexPath = path_1.default.resolve(clientPath, "index.html");
+    console.log("Serving index.html from:", indexPath);
+    res.sendFile(indexPath);
+});
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });

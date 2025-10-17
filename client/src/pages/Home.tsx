@@ -10,10 +10,10 @@ function Home() {
   };
 
   return (
-    <div className="relative flex justify-center items-center w-screen h-screen">
+    <div className="relative flex justify-center items-center w-full min-h-screen">
       <Background />
       <div
-        className="flex justify-center items-center flex-col w-screen h-screen cursor-pointer px-4 relative z-10"
+        className="flex justify-center items-center flex-col w-full min-h-screen cursor-pointer px-4 relative z-10"
         onClick={handleClick}
       >
         {/* Heading */}

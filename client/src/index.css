@@ -1,19 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    font-family: "Rubik", sans-serif;
-    font-style: normal;
+  font-family: "Rubik", sans-serif;
+  font-style: normal;
 }
 
 @keyframes fadeLoop {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
   }
-  25%, 75% {
+  25%,
+  75% {
     opacity: 1;
   }
 }
@@ -22,12 +24,17 @@
   animation: fadeLoop 4s infinite;
 }
 
-html, body {
-  background-color: #333446;
-  min-height: 100%;
+/* Ensure the document can grow taller than the viewport so vertical scrolling works */
+html,
+body,
+#root {
+  height: 100%;
 }
 
+/* Page background and reset */
+html,
 body {
+  background-color: #333446;
   margin: 0;
   padding: 0;
 }

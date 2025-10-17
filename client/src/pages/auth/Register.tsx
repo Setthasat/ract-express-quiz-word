@@ -119,7 +119,7 @@ function Register() {
   };
 
   return (
-    <div className="flex justify-center items-center w-screen h-screen">
+    <div className="flex justify-center items-center w-full min-h-screen">
       <Background />
       <div
         className="flex flex-col justify-start items-center bg-black/5 backdrop-blur-md 
